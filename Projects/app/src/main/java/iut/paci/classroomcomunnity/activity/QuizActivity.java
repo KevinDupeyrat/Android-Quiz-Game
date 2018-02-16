@@ -17,15 +17,19 @@ import iut.paci.classroomcomunnity.R;
 
 public class QuizActivity extends AppCompatActivity {
 
+    // Élémént graphique
     private final List<Button> LISTBUTTON = new ArrayList<Button>();
     private final String GOODANSWER = "Wifi";
     private ProgressBar progressBar;
-    private Handler handler = new Handler();
     private TextView time;
+    private TextView textScore1;
+    private TextView textScore2;
+
+    private Handler handler = new Handler();
     private int infoSec = 10;
     private int progressStatus = 0;
     private boolean timeOut = false;
-    private Thread threadTime;
+    private int score1 = 0;
 
 
     private List<Button> getListButton() {
@@ -42,7 +46,6 @@ public class QuizActivity extends AppCompatActivity {
         setContentView(R.layout.activity_quiz);
 
         this.initButton();
-
         this.initProgressBar();
 
     }
@@ -68,6 +71,9 @@ public class QuizActivity extends AppCompatActivity {
                 }
             });
         }
+
+        this.textScore1 = (TextView) findViewById(R.id.textScore);
+        this.textScore2 = (TextView) findViewById(R.id.textScore2);
     }
 
     /**
@@ -84,7 +90,7 @@ public class QuizActivity extends AppCompatActivity {
         time.setText(Integer.toString(infoSec));
 
         // Nouveau Thread
-        threadTime = new Thread(new Runnable() {
+        new Thread(new Runnable() {
             @Override
             public void run() {
 
@@ -123,8 +129,7 @@ public class QuizActivity extends AppCompatActivity {
                 }
                 timeOut = true;
             }
-        });
-        threadTime.start();// Demarrage du service
+        }).start();// Demarrage du service
     }
 
 
@@ -164,7 +169,10 @@ public class QuizActivity extends AppCompatActivity {
 
         } else {
             // On indique à l'utilisateur qu'il a gangé
-            Toast.makeText(getApplicationContext(), "C'est gangée !! :)", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "C'est gagnée !! :)", Toast.LENGTH_SHORT).show();
+            this.score1 += 5;
+            this.textScore1.setText(Integer.toString(this.score1));
+
             // On désactive tous les autres boutons
             this.winButton();
         }
