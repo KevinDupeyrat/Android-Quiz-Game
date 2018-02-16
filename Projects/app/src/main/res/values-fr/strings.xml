@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ClassroomComunnity</string>
+    <string name="ident" translatable="false">Identifiant</string>
+    <string name="mdp" translatable="false">Mot de passe</string>
+    <string name="boutonValid" translatable="false">Se connecter</string>
+    <string name="welcome_to_my_world">Bienvenue dans mon monde ...</string>
+</resources>

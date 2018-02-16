@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="iut.paci.classroomcomunnity.activity.QuizActivity">
+
+
+        <!-- 1 progressBar -->
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminate="false"
+            android:max="10"
+            android:progress="1"/>
+
+        <!-- 2 imageView -->
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/img1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_launcher_round"
+            android:layout_below="@+id/progressBar"
+            />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/img2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:src="@mipmap/ic_launcher_round"
+            android:layout_below="@+id/progressBar"
+            android:layout_alignParentRight="true" />
+
+        <!-- 2 textView nom -->
+
+        <TextView
+            android:id="@+id/textNom1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/img1"
+            android:layout_below="@id/progressBar"
+            android:text="@string/nom2" />
+
+        <TextView
+            android:id="@+id/textNom2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/img2"
+            android:layout_below="@id/progressBar"
+            android:text="@string/nom1" />
+
+        <!-- 2 textView score -->
+
+        <TextView
+            android:id="@+id/textScore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/score1"
+            android:layout_below="@id/textNom2"
+            android:layout_toRightOf="@id/img1"/>
+
+        <TextView
+            android:id="@+id/textScore2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/score2"
+            android:layout_below="@id/textNom1"
+            android:layout_toLeftOf="@id/img2"/>
+
+        <!-- 1 textView timer -->
+
+        <TextView
+            android:id="@+id/textTimer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/score2"
+            android:layout_below="@id/textNom1"
+            android:layout_centerInParent="true"
+            android:textColor="@color/colorAccent"
+            android:textSize="40dp"/>
+
+        <!-- 1 textView question -->
+
+        <TextView
+            android:id="@+id/textQuestion"
+            android:layout_width="250dp"
+            android:layout_centerInParent="true"
+            android:layout_height="wrap_content"
+            android:text="@string/question"
+            android:textSize="32sp"
+            android:layout_below="@+id/textTimer"
+            android:layout_marginTop="30dp"/>
+
+        <!-- 4 boutons -->
+
+        <Button
+            android:id="@+id/b1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/gsm"
+            android:layout_above="@+id/b2"
+            android:background="@drawable/roundedbutton"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="40px"
+            android:layout_marginRight="40px"
+            android:padding="20dp"/>
+
+        <Button
+            android:id="@+id/b2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/infrarouge"
+            android:layout_above="@+id/b3"
+            android:background="@drawable/roundedbutton"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="40px"
+            android:layout_marginRight="40px"
+            android:padding="20dp"/>
+
+        <Button
+            android:id="@+id/b3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/bluetooth"
+            android:layout_above="@+id/b4"
+            android:background="@drawable/roundedbutton"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="40px"
+            android:layout_marginRight="40px"
+            android:padding="20dp"/>
+
+        <Button
+            android:id="@+id/b4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/wifi"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/roundedbutton"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="40px"
+            android:layout_marginRight="40px"
+            android:padding="20dp"/>
+
+    </RelativeLayout>
+</android.support.v4.widget.DrawerLayout>

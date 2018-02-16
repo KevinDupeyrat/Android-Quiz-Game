@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name" translatable="false">ClassroomComunnity</string>
+    <string name="ident" translatable="false">Username</string>
+    <string name="mdp" translatable="false">Password</string>
+    <string name="boutonValid" translatable="false">Connect</string>
+    <string name="welcome_to_my_world">Welcome to my world ...</string>
+    <string name="wifi">Wifi</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="infrarouge">Infrarouge</string>
+    <string name="gsm">Gsm</string>
+    <string name="question">Quel technologie permet de se connecter à un réseau sans fil ?</string>
+    <string name="nom1">Ahmed CHAOU</string>
+    <string name="nom2">Gaston le Citron</string>
+    <string name="score2">0</string>
+    <string name="score1">0</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_first_fragment">Hello First Fragment</string>
+    <string name="hello_second_fragment">Hello Second Fragment</string>
+    <string name="hello_fourth_fragment">Hello Fourth Fragment</string>
+    <string name="hello_third_fragment">Hello Third Fragment</string>
+    <string name="first_fragment">First Fragment</string>
+    <string name="second_fragment">Second Fragment</string>
+    <string name="third_fragment">Thirs Fragment</string>
+    <string name="fourth_fragment">Fourth Fragment</string>
+</resources>

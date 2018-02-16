@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- ==== Couleur primaire ==== -->
+    <!--<color name="colorPrimary">#3F51B5</color>-->
+    <color name="colorPrimary">#000</color>
+
+
+    <!-- ==== Couleur primaire sombre ==== -->
+    <!--<color name="colorPrimaryDark">#303F9F</color>-->
+    <color name="colorPrimaryDark">#01DF01</color>
+
+
+    <!-- ==== Couleur de séléction ==== -->
+    <!--<color name="colorAccent">#FF4081</color>-->
+    <color name="colorAccent">#01DF01</color>
+
+
+    <color name="truResp">#01DF01</color>
+    <color name="falseResp">#FF0000</color>
+    <color name="otherResp">#A4A4A4</color>
+
+</resources>
