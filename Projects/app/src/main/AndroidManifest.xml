@@ -14,16 +14,18 @@
         <!-- Déclaration de l'activité -->
         <activity android:name=".activity.LoginActivity">
             <intent-filter>
-
                 <!-- Déclaration comme activité principale -->
                 <action android:name="android.intent.action.MAIN" />
                 <!-- Point d'entée -->
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.MainActivity" />
-        <activity android:name=".activity.QuizActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
+
+        <activity android:name=".activity.MainActivity">
+        </activity>
+
+        <activity android:name=".activity.QuizActivity">
+        </activity>
     </application>
 
 </manifest>

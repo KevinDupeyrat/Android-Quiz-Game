@@ -1,15 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="iut.paci.classroomcomunnity.activity.MainActivity">
+    android:id="@+id/drawer">
 
-    <TextView
+
+    <!-- Frame vide qui sera remplacer par le
+        fragement du menu -->
+    <FrameLayout
+        android:id="@+id/contentFrame"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/welcome_to_my_world"
-        android:gravity="center"/>
+        android:layout_height="match_parent">
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/textWelcome"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textColor="@color/otherResp"
+            android:textSize="30dp"
+            android:text="@string/welcome"/>
+
+    </FrameLayout>
+
+    <!-- On met le Navigateur dans le Drawer.
+        Il contient une entête avec une image et
+        un menu -->
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:headerLayout="@layout/nav_header"
+        app:menu="@menu/nav_menu" />
+
+</android.support.v4.widget.DrawerLayout>

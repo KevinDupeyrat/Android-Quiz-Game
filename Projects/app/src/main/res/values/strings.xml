@@ -10,18 +10,17 @@
     <string name="gsm">Gsm</string>
     <string name="question">Quel technologie permet de se connecter à un réseau sans fil ?</string>
     <string name="nom1">Ahmed CHAOU</string>
-    <string name="nom2">Gaston le Citron</string>
+    <string name="nom2">Kevin.D</string>
     <string name="score2">0</string>
     <string name="score1">0</string>
+    <string name="friend">Amis</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="hello_first_fragment">Hello First Fragment</string>
-    <string name="hello_second_fragment">Hello Second Fragment</string>
-    <string name="hello_fourth_fragment">Hello Fourth Fragment</string>
-    <string name="hello_third_fragment">Hello Third Fragment</string>
-    <string name="first_fragment">First Fragment</string>
-    <string name="second_fragment">Second Fragment</string>
-    <string name="third_fragment">Thirs Fragment</string>
-    <string name="fourth_fragment">Fourth Fragment</string>
+    <string name="Setting">Paramètres</string>
+    <string name="about">À propos</string>
+    <string name="welcome">Welcome !!!! Choose your friend</string>
+
 </resources>

@@ -1,17 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/drawer"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context="iut.paci.classroomcomunnity.activity.QuizActivity">
+    android:layout_height="match_parent"
+    tools:context="iut.paci.classroomcomunnity.activity.QuizActivity">
 
 
         <!-- 1 progressBar -->
@@ -155,5 +149,4 @@
             android:layout_marginRight="40px"
             android:padding="20dp"/>
 
-    </RelativeLayout>
-</android.support.v4.widget.DrawerLayout>
+</RelativeLayout>

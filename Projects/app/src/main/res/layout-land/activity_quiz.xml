@@ -105,7 +105,7 @@
         android:text="@string/question"
         android:textSize="32sp"
         android:layout_below="@+id/textTimer"
-        android:layout_marginTop="40dp"/>
+        android:layout_marginTop="5dp"/>
 
     <LinearLayout
         android:id="@+id/groupButt1"
@@ -125,7 +125,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginLeft="40px"
             android:layout_marginRight="40px"
-            android:padding="20dp"/>
+            android:padding="15dp"/>
 
         <Button
             android:id="@+id/b2"
@@ -136,7 +136,7 @@
             android:layout_marginRight="40px"
             android:layout_marginTop="5dp"
             android:background="@drawable/roundedbutton"
-            android:padding="20dp"
+            android:padding="15dp"
             android:text="@string/infrarouge" />
 
 
@@ -160,7 +160,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginLeft="40px"
             android:layout_marginRight="40px"
-            android:padding="20dp"/>
+            android:padding="15dp"/>
 
         <Button
             android:id="@+id/b4"
@@ -173,7 +173,7 @@
             android:layout_marginBottom="5dp"
             android:layout_marginLeft="40px"
             android:layout_marginRight="40px"
-            android:padding="20dp"/>
+            android:padding="15dp"/>
 
     </LinearLayout>
 

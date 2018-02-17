@@ -1,26 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item
-        android:id="@+id/nav_first"
-        android:icon="@drawable/ic_filter_1_black_24dp"
-        android:title="@string/first_fragment"/>
+    <group android:checkableBehavior="single">
 
-    <item
-        android:id="@+id/nav_second"
-        android:icon="@drawable/ic_filter_2_black_24dp"
-        android:title="@string/second_fragment"/>
+        <item
+            android:id="@+id/nav_friend"
+            android:icon="@drawable/ic_group_black_24dp"
+            android:title="@string/friend"/>
 
-    <item
-        android:id="@+id/nav_third"
-        android:icon="@drawable/ic_filter_3_black_24dp"
-        android:title="@string/third_fragment"/>
+        <item
+            android:id="@+id/nav_present"
+            android:icon="@drawable/ic_person_pin_circle_black_24dp"
+            android:title="Présence"/>
 
-    <item
-        android:id="@+id/nav_fourth"
-        android:icon="@drawable/ic_filter_4_black_24dp"
-        android:title="@string/fourth_fragment"/>
 
+        <item android:title="Autre">
+            <menu>
+                <group>
+                    <item
+                        android:id="@+id/nav_setting"
+                        android:icon="@drawable/ic_settings_black_24dp"
+                        android:title="@string/Setting"/>
+                    <item
+                        android:id="@+id/nav_about"
+                        android:icon="@drawable/ic_help_black_24dp"
+                        android:title="@string/about"/>
+                </group>
+            </menu>
+        </item>
+
+    </group>
 
 
 </menu>

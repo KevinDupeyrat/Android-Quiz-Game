@@ -24,6 +24,7 @@ public class QuizActivity extends AppCompatActivity {
     private TextView time;
     private TextView textScore1;
     private TextView textScore2;
+    private TextView nomAdvers;
 
     private Handler handler = new Handler();
     private int infoSec = 10;
@@ -48,6 +49,35 @@ public class QuizActivity extends AppCompatActivity {
         this.initButton();
         this.initProgressBar();
 
+
+
+        // ici on vérifie que des données n'ont pas
+        // étaient sauvegardé par onStop()
+        if (savedInstanceState != null){
+
+            infoSec = savedInstanceState.getInt("infoSec");
+            progressStatus = savedInstanceState.getInt("progressStatus");
+            score1 = savedInstanceState.getInt("score1");
+            timeOut = savedInstanceState.getBoolean("timeOut");
+
+        }
+
+    }
+
+    /**
+     * Méthode qui permet de faire une sauvegarde de l'état
+     * de l'activité au moment d'un onStop()
+     *
+     * @param icicle
+     */
+    @Override
+    protected void onSaveInstanceState(Bundle icicle) {
+        super.onSaveInstanceState(icicle);
+
+        icicle.putInt("infoSec", infoSec);
+        icicle.putInt("progressStatus", progressStatus);
+        icicle.putInt("score1", score1);
+        icicle.putBoolean("timeOut", timeOut);
     }
 
     /**
@@ -74,6 +104,9 @@ public class QuizActivity extends AppCompatActivity {
 
         this.textScore1 = (TextView) findViewById(R.id.textScore);
         this.textScore2 = (TextView) findViewById(R.id.textScore2);
+        this.nomAdvers = (TextView) findViewById(R.id.textNom2);
+
+        this.nomAdvers.setText(getIntent().getExtras().getString("nom"));
     }
 
     /**

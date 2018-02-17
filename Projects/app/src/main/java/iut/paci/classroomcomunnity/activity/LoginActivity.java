@@ -63,7 +63,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 else {
 
-                    if (!iden.equals("kevin") || !mdp.equals("123")){
+                    if (!iden.equals("a") || !mdp.equals("1")){
                         Toast.makeText(view.getContext(), "Identifiant ou mot de passe incorrecte !", Toast.LENGTH_SHORT).show();
                         Log.i(TAG, "Identifiant ou mot de passe incorrecte !");
                     } else {
@@ -75,19 +75,11 @@ public class LoginActivity extends AppCompatActivity {
 
                         // Création d'un Intent (activité)
                         // Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                        Intent intent = new Intent(getApplicationContext(), QuizActivity.class);
-                        // Création d'une boite
-                        Bundle bundle = new Bundle();
-                        // Ajout de l'identifiant dans notre boite
-                        bundle.putString("identifiant",iden);
-                        bundle.putString("mdp",mdp);
-                        // Ajout de notre boite dans notre prochaine activité
-                        intent.putExtras(bundle);
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                         // On demarre une activité
                         startActivity(intent);
                     }
                 }
-
             }
         });
     }
