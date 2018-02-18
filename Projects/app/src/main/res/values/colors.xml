@@ -4,13 +4,9 @@
     <!-- ==== Couleur primaire ==== -->
     <!--<color name="colorPrimary">#3F51B5</color>-->
     <color name="colorPrimary">#000</color>
-
-
     <!-- ==== Couleur primaire sombre ==== -->
     <!--<color name="colorPrimaryDark">#303F9F</color>-->
     <color name="colorPrimaryDark">#0B610B</color>
-
-
     <!-- ==== Couleur de séléction ==== -->
     <!--<color name="colorAccent">#FF4081</color>-->
     <color name="colorAccent">#01DF01</color>
@@ -19,5 +15,8 @@
     <color name="truResp">#01DF01</color>
     <color name="falseResp">#FF0000</color>
     <color name="otherResp">#A4A4A4</color>
+
+    <color name="manColor">#0000FF</color>
+    <color name="womanColor">#FF00FF</color>
 
 </resources>

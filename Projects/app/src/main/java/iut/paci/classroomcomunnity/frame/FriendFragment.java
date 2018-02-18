@@ -11,8 +11,13 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import iut.paci.classroomcomunnity.R;
 import iut.paci.classroomcomunnity.activity.QuizActivity;
+import iut.paci.classroomcomunnity.adapter.FriendAdapter;
+import iut.paci.classroomcomunnity.bean.Amis;
 
 /**
  * Fragment des amies
@@ -56,29 +61,34 @@ public class FriendFragment extends Fragment {
 
         ListView listView = (ListView) rootView.findViewById(R.id.listView);
 
-        String [] items = {
-                "Loic.P",
-                "Arnaud.R",
-                "Aurore.B",
-                "Mathieu.N",
-                "Kevin.B",
-                "Émilie.D",
-                "Nicolas.E",
-                "Huguette.L",
-                "Gabrielle.D",
-                "Sheldon.C",
-                "Léonard.H",
-                "Marine.C",
-                "Sisko.Y"
-        };
+        List<Amis> amisList = new ArrayList<Amis>();
+        amisList.add(new Amis("Loic.P", R.drawable.man, R.color.manColor));
+        amisList.add(new Amis("Arnaud.R", R.drawable.man, R.color.manColor));
+        amisList.add(new Amis("Aurore.B", R.drawable.woman, R.color.womanColor));
+        amisList.add(new Amis("Mathieu.N", R.drawable.man, R.color.manColor));
+        amisList.add(new Amis("Kevin.B", R.drawable.man, R.color.manColor));
+        amisList.add(new Amis("Émilie.D", R.drawable.woman, R.color.womanColor));
+        amisList.add(new Amis("Nicolas.E", R.drawable.man, R.color.manColor));
+        amisList.add(new Amis("Huguette.L", R.drawable.woman, R.color.womanColor));
+        amisList.add(new Amis("Gabrielle.D", R.drawable.woman, R.color.womanColor));
+        amisList.add(new Amis("Sheldon.C", R.drawable.man, R.color.manColor));
+        amisList.add(new Amis("Léonard.H", R.drawable.man, R.color.manColor));
+        amisList.add(new Amis("Marine.C", R.drawable.woman, R.color.womanColor));
+        amisList.add(new Amis("Sisko.Y", R.drawable.man, R.color.manColor));
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_expandable_list_item_1, items);
+
+        FriendAdapter adapter = new FriendAdapter(rootView.getContext(), R.layout.item_player, amisList);
+
+
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
 
-                String nom = (String) adapterView.getItemAtPosition(position);
+                String nom = ((Amis) adapterView.getItemAtPosition(position)).getNom();
+                int ImageRessource = ((Amis) adapterView.getItemAtPosition(position)).getAvatarRessource();
+                int colorText = ((Amis) adapterView.getItemAtPosition(position)).getColorRessource();
 
                 //Toast.makeText(getContext(),
                   //      "Vous avez cliquer sur " + nom, Toast.LENGTH_LONG)
@@ -91,6 +101,8 @@ public class FriendFragment extends Fragment {
                 Bundle bundle = new Bundle();
                 // Ajout de l'identifiant dans notre boite
                 bundle.putString("nom",nom);
+                bundle.putInt("avatar",ImageRessource);
+                bundle.putInt("color",colorText);
                 // Ajout de notre boite dans notre prochaine activité
                 intent.putExtras(bundle);
                 // On demarre une activité

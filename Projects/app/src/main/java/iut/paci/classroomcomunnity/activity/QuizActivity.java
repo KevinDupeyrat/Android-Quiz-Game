@@ -2,10 +2,12 @@ package iut.paci.classroomcomunnity.activity;
 
 import android.graphics.Color;
 import android.os.Handler;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,6 +27,7 @@ public class QuizActivity extends AppCompatActivity {
     private TextView textScore1;
     private TextView textScore2;
     private TextView nomAdvers;
+    private ImageView avatarRAdvers;
 
     private Handler handler = new Handler();
     private int infoSec = 10;
@@ -105,8 +108,11 @@ public class QuizActivity extends AppCompatActivity {
         this.textScore1 = (TextView) findViewById(R.id.textScore);
         this.textScore2 = (TextView) findViewById(R.id.textScore2);
         this.nomAdvers = (TextView) findViewById(R.id.textNom2);
+        this.avatarRAdvers = (ImageView) findViewById(R.id.img2);
 
         this.nomAdvers.setText(getIntent().getExtras().getString("nom"));
+        this.avatarRAdvers.setImageResource(getIntent().getExtras().getInt("avatar"));
+        this.nomAdvers.setTextColor(ContextCompat.getColor(getApplicationContext(), getIntent().getExtras().getInt("color")));
     }
 
     /**
@@ -193,6 +199,8 @@ public class QuizActivity extends AppCompatActivity {
                     b.setPadding(0, 0, 0, 0);
                     // On desactive les boutons
                     b.setEnabled(false);
+                } else if (b.getText().toString().equals(this.getGoodAnswer())) {
+                    b.setBackgroundResource(R.color.colorAccent);
                 }
                 // On retire le listener
                 // pour ne pas que le joueur
@@ -223,6 +231,7 @@ public class QuizActivity extends AppCompatActivity {
                 b.setPadding(0,0,0,0);
                 b.setEnabled(false);
             } else {
+                b.setBackgroundResource(R.color.colorAccent);
                 // On retire le listener
                 // pour ne pas que le joueur
                 // essai de jouer encore

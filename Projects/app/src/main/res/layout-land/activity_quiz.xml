@@ -30,16 +30,15 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/img1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@mipmap/ic_launcher_round"
-        android:layout_below="@+id/progressBar"
-        />
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@drawable/monavatar"
+        android:layout_below="@+id/progressBar" />
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/img2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:layout_alignParentEnd="true"
         android:src="@mipmap/ic_launcher_round"
         android:layout_below="@+id/progressBar"
