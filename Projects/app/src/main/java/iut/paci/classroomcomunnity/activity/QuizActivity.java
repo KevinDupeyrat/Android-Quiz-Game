@@ -110,6 +110,8 @@ public class QuizActivity extends AppCompatActivity {
         this.nomAdvers = (TextView) findViewById(R.id.textNom2);
         this.avatarRAdvers = (ImageView) findViewById(R.id.img2);
 
+        // On met à jout le nom, la couleur du nom et l'avatar
+        // en fonction de la séléction précédante
         this.nomAdvers.setText(getIntent().getExtras().getString("nom"));
         this.avatarRAdvers.setImageResource(getIntent().getExtras().getInt("avatar"));
         this.nomAdvers.setTextColor(ContextCompat.getColor(getApplicationContext(), getIntent().getExtras().getInt("color")));
@@ -200,6 +202,8 @@ public class QuizActivity extends AppCompatActivity {
                     // On desactive les boutons
                     b.setEnabled(false);
                 } else if (b.getText().toString().equals(this.getGoodAnswer())) {
+
+                    // On met en verre la bonne réponse
                     b.setBackgroundResource(R.color.colorAccent);
                 }
                 // On retire le listener

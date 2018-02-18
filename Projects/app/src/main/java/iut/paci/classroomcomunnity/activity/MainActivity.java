@@ -1,6 +1,8 @@
 package iut.paci.classroomcomunnity.activity;
 
 
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import iut.paci.classroomcomunnity.R;
@@ -86,9 +89,14 @@ public class MainActivity extends AppCompatActivity {
      * Méthode pour la gestion de la selection dans le menu
      * @param menuItem
      */
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public void selectDrawerItem(MenuItem menuItem) {
+
+        ((FrameLayout)findViewById(R.id.contentFrame)).setBackground(null);
         ((TextView)findViewById(R.id.textWelcome)).setText("");
-        // Create a new fragment and specify the fragment to show based on nav item clicked
+
+        // Creation d'un nouveau fragment que nous mettrons à la place
+        // de celle par défaut
         Fragment fragment = null;
         Class fragmentClass;
         switch(menuItem.getItemId()) {
@@ -114,15 +122,15 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        // Insert the fragment by replacing any existing fragment
+        // On insert le fragment qui va remplacer celui de base
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.contentFrame, fragment).commit();
 
-        // Highlight the selected item has been done by NavigationView
+        // Surbrillance dans le Navigateur View de l'item séléctionné
         menuItem.setChecked(true);
-        // Set action bar title
+        // changement du titre de l'action bar
         setTitle(menuItem.getTitle());
-        // Close the navigation drawer
+        // Fermeture du Drawer qui contient le Navigateur View
         drawer.closeDrawer(GravityCompat.START);
     }
 

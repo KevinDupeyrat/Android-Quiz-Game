@@ -12,14 +12,15 @@
     <FrameLayout
         android:id="@+id/contentFrame"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@drawable/wallpaper_interrogation">
 
         <TextView
             android:id="@+id/textWelcome"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:textColor="@color/otherResp"
+            android:textColor="@color/colorPrimary"
             android:textSize="30dp"
             android:text="@string/welcome"/>
 
