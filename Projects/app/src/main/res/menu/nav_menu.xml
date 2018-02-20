@@ -24,6 +24,13 @@
             android:icon="@drawable/ic_help_black_24dp"
             android:title="@string/about"/>
 
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/ic_power_settings_new_black_24dp"
+            android:title="@string/logout"/>
+
+
+
     </group>
 
 

@@ -21,6 +21,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="Setting">Paramètres</string>
     <string name="about">À propos</string>
-    <string name="welcome">Welcome !!!! Choose your friend</string>
+    <string name="welcome">Welcome !! Choose your friend</string>
+    <string name="logout">déconnexion</string>
 
 </resources>

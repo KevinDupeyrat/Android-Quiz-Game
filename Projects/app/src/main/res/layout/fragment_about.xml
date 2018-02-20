@@ -2,9 +2,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/wallpaper2"
     tools:context="iut.paci.classroomcomunnity.frame.AboutFragment">
 
     <!-- TODO: Update blank fragment layout -->
+    <TextView
+        android:id="@+id/textWelcome"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="Author : Dupeyrat \n
+University : Descartes Paris 5 \n
+Cours : Android"
+        android:textColor="@color/colorAccent"/>
 
 
 </FrameLayout>

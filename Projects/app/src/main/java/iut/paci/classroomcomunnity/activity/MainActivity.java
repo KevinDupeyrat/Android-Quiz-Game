@@ -78,7 +78,9 @@ public class MainActivity extends AppCompatActivity {
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
-                        selectDrawerItem(menuItem);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                            selectDrawerItem(menuItem);
+                        }
                         return true;
                     }
                 });
@@ -112,6 +114,8 @@ public class MainActivity extends AppCompatActivity {
             case R.id.nav_about:
                 fragmentClass = AboutFragment.class;
                 break;
+            case R.id.nav_logout:
+                this.finish();
             default:
                 fragmentClass = FriendFragment.class;
         }

@@ -7,6 +7,7 @@
     android:gravity="fill"
     android:orientation="horizontal"
     android:padding="50dp"
+    android:background="@drawable/wallpaper2"
     tools:context="iut.paci.classroomcomunnity.activity.LoginActivity">
 
 
