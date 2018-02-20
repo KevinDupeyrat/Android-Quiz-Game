@@ -45,14 +45,17 @@
             android:id="@+id/textNom1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
             android:layout_toRightOf="@id/img1"
             android:layout_below="@id/progressBar"
+            android:textColor="@color/colorAccent"
             android:text="@string/nom2" />
 
         <TextView
             android:id="@+id/textNom2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
             android:layout_toLeftOf="@id/img2"
             android:layout_below="@id/progressBar"
             android:text="@string/nom1" />
@@ -64,6 +67,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/score1"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/colorAccent"
             android:layout_below="@id/textNom2"
             android:layout_toRightOf="@id/img1"/>
 
@@ -72,6 +77,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/score2"
+            android:layout_marginRight="10dp"
             android:layout_below="@id/textNom1"
             android:layout_toLeftOf="@id/img2"/>
 

@@ -116,6 +116,7 @@ public class QuizActivity extends AppCompatActivity {
         this.nomAdvers.setText(getIntent().getExtras().getString("nom"));
         this.avatarRAdvers.setImageResource(getIntent().getExtras().getInt("avatar"));
         this.nomAdvers.setTextColor(ContextCompat.getColor(getApplicationContext(), getIntent().getExtras().getInt("color")));
+        this.textScore2.setTextColor(ContextCompat.getColor(getApplicationContext(), getIntent().getExtras().getInt("color")));
     }
 
     /**
@@ -190,7 +191,7 @@ public class QuizActivity extends AppCompatActivity {
         // Si la reponse est fausse
         if (!button.getText().toString().equals(this.getGoodAnswer())) {
             // On color en rouge la mauvaise reponse
-            button.setBackgroundResource(R.color.falseResp);
+            button.setBackgroundResource(R.drawable.roundedbutton_lose);
             // On l'indique à l'utilisateur
             Toast.makeText(getApplicationContext(), "Mauvaise reponse ... :(", Toast.LENGTH_SHORT).show();
             // On grise toutes les autres case sauf la bonne reponse
@@ -205,7 +206,7 @@ public class QuizActivity extends AppCompatActivity {
                 } else if (b.getText().toString().equals(this.getGoodAnswer())) {
 
                     // On met en verre la bonne réponse
-                    b.setBackgroundResource(R.color.colorAccent);
+                    b.setBackgroundResource(R.drawable.roundedbutton_win);
                 }
                 // On retire le listener
                 // pour ne pas que le joueur
@@ -239,7 +240,7 @@ public class QuizActivity extends AppCompatActivity {
                 b.setPadding(0,0,0,0);
                 b.setEnabled(false);
             } else {
-                b.setBackgroundResource(R.color.colorAccent);
+                b.setBackgroundResource(R.drawable.roundedbutton_win);
                 // On retire le listener
                 // pour ne pas que le joueur
                 // essai de jouer encore
