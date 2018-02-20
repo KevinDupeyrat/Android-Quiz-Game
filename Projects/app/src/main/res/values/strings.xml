@@ -23,5 +23,6 @@
     <string name="about">À propos</string>
     <string name="welcome">Welcome !! Choose your friend</string>
     <string name="logout">déconnexion</string>
+    <string name="home">Home</string>
 
 </resources>

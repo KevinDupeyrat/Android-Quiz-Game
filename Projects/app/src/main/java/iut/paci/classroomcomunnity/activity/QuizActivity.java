@@ -34,6 +34,7 @@ public class QuizActivity extends AppCompatActivity {
     private int progressStatus = 0;
     private boolean timeOut = false;
     private int score1 = 0;
+    private int score2 = 0;
 
 
     private List<Button> getListButton() {
@@ -211,6 +212,9 @@ public class QuizActivity extends AppCompatActivity {
                 // essai de jouer encore
                 b.setOnClickListener(null);
             }
+
+            this.score2 += 5;
+            this.textScore2.setText(Integer.toString(this.score2));
 
         } else {
             // On indique à l'utilisateur qu'il a gangé

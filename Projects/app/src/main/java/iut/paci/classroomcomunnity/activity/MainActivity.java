@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import iut.paci.classroomcomunnity.R;
 import iut.paci.classroomcomunnity.frame.AboutFragment;
@@ -116,8 +117,15 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.nav_logout:
                 this.finish();
+                return;
+            case R.id.nav_home:
+                // TODO: Faire revenir à l'écran principal (fermeture des fragments)
+                Toast.makeText(this, "Fonctionnalité non implémenté encore ...", Toast.LENGTH_SHORT).show();
+                drawer.closeDrawer(GravityCompat.START);
+                return;
             default:
-                fragmentClass = FriendFragment.class;
+                fragmentClass = null;
+                return;
         }
 
         try {
