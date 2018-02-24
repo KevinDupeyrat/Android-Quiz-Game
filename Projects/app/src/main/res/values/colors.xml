@@ -16,7 +16,7 @@
     <color name="falseResp">#FF0000</color>
     <color name="otherResp">#A4A4A4</color>
 
-    <color name="manColor">#0000FF</color>
+    <color name="manColor">#0040FF</color>
     <color name="womanColor">#FF00FF</color>
 
 </resources>

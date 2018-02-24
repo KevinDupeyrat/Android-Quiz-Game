@@ -61,19 +61,17 @@ public class FriendFragment extends Fragment {
         ListView listView = (ListView) rootView.findViewById(R.id.listView);
 
         List<Amis> amisList = new ArrayList<Amis>();
-        amisList.add(new Amis("Loic.P", R.drawable.man, R.color.manColor));
-        amisList.add(new Amis("Arnaud.R", R.drawable.man, R.color.manColor));
-        amisList.add(new Amis("Aurore.B", R.drawable.woman, R.color.womanColor));
-        amisList.add(new Amis("Mathieu.N", R.drawable.man, R.color.manColor));
-        amisList.add(new Amis("Kevin.B", R.drawable.man, R.color.manColor));
-        amisList.add(new Amis("Émilie.D", R.drawable.woman, R.color.womanColor));
-        amisList.add(new Amis("Nicolas.E", R.drawable.man, R.color.manColor));
-        amisList.add(new Amis("Huguette.L", R.drawable.woman, R.color.womanColor));
-        amisList.add(new Amis("Gabrielle.D", R.drawable.woman, R.color.womanColor));
-        amisList.add(new Amis("Sheldon.C", R.drawable.man, R.color.manColor));
-        amisList.add(new Amis("Léonard.H", R.drawable.man, R.color.manColor));
-        amisList.add(new Amis("Marine.C", R.drawable.woman, R.color.womanColor));
-        amisList.add(new Amis("Sisko.Y", R.drawable.man, R.color.manColor));
+        amisList.add(new Amis("Loic.P", R.drawable.man1, R.color.manColor));
+        amisList.add(new Amis("Arnaud.R", R.drawable.man2, R.color.manColor));
+        amisList.add(new Amis("Aurore.B", R.drawable.girl1, R.color.womanColor));
+        amisList.add(new Amis("Mathieu.N", R.drawable.man3, R.color.manColor));
+        amisList.add(new Amis("Kevin.B", R.drawable.man4, R.color.manColor));
+        amisList.add(new Amis("Émilie.D", R.drawable.girl2, R.color.womanColor));
+        amisList.add(new Amis("Jonathan.H", R.drawable.boy1, R.color.manColor));
+        amisList.add(new Amis("Huguette.L", R.drawable.girl2, R.color.womanColor));
+        amisList.add(new Amis("Sheldon.C", R.drawable.man5, R.color.manColor));
+        amisList.add(new Amis("Léonard.H", R.drawable.boy3, R.color.manColor));
+        amisList.add(new Amis("Sisko.Y", R.drawable.man2, R.color.manColor));
 
 
         FriendAdapter adapter = new FriendAdapter(rootView.getContext(), R.layout.item_player, amisList);
