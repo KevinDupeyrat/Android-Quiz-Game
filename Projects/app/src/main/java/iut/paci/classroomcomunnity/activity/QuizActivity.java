@@ -41,10 +41,11 @@ public class QuizActivity extends AppCompatActivity {
     private TextView nomAdvers;
     private ImageView avatarRAdvers;
 
-    private Handler handler = new Handler();
-    private int infoSec = 10;
-    private int progressStatus = 0;
-    private boolean timeOut = false;
+    private Thread thread;
+    private Handler handler;
+    private int infoSec;
+    private int progressStatus;
+    private boolean timeOut;
     private int score1 = 0;
     private int score2 = 0;
     private List<Question> questionList = new ArrayList<>();
@@ -115,16 +116,56 @@ public class QuizActivity extends AppCompatActivity {
     private void initButton() {
 
 
-        List<String> rep = this.randomQuestion.getReponseText();
-
-        Collections.shuffle(rep);
-
-
         // Création de la liste de bouton
         this.getListButton().add((Button) findViewById(R.id.b1));
         this.getListButton().add((Button) findViewById(R.id.b2));
         this.getListButton().add((Button) findViewById(R.id.b3));
         this.getListButton().add((Button) findViewById(R.id.b4));
+
+        // Initialisation des éléments graphiques
+        this.question = (TextView) findViewById(R.id.textQuestion);
+        this.textScore1 = (TextView) findViewById(R.id.textScore);
+        this.textScore2 = (TextView) findViewById(R.id.textScore2);
+        this.nomAdvers = (TextView) findViewById(R.id.textNom2);
+        this.avatarRAdvers = (ImageView) findViewById(R.id.img2);
+
+        // On met à jout le nom, la couleur du nom et l'avatar
+        // en fonction de la séléction précédante
+        this.nomAdvers.setText(getIntent().getExtras().getString("nom"));
+        this.avatarRAdvers.setImageResource(getIntent().getExtras().getInt("avatar"));
+        this.nomAdvers.setTextColor(ContextCompat.getColor(getApplicationContext(), getIntent().getExtras().getInt("color")));
+        this.textScore2.setTextColor(ContextCompat.getColor(getApplicationContext(), getIntent().getExtras().getInt("color")));
+
+        // Bar de progression
+        this.progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        // Compteur de temps
+        this.time = (TextView) findViewById(R.id.textTimer);
+
+        this.initData();
+
+    }
+
+
+    /**
+     * Méthode d'initialisation des données
+     * de l'activité (Question et reponses)
+     */
+    private void initData() {
+
+        this.handler = new Handler();
+        this.infoSec = 10;
+        this.progressStatus = 0;
+        this.timeOut = false;
+        this.time.setText(Integer.toString(infoSec));
+
+        for (Button b: this.getListButton()) {
+            b.setBackgroundResource(R.color.colorAccent);
+            b.setEnabled(true);
+        }
+
+        List<String> rep = this.randomQuestion.getReponseText();
+
+        Collections.shuffle(rep);
 
         int i = 0;
         // Ajout du listeneur à tous les boutons
@@ -139,24 +180,15 @@ public class QuizActivity extends AppCompatActivity {
             b.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    timeOut = true;
                     checkButton(b);
+                    reinitialise();
                 }
             });
         }
 
-        this.question = (TextView) findViewById(R.id.textQuestion);
         this.question.setText(this.randomQuestion.getQuestion());
-        this.textScore1 = (TextView) findViewById(R.id.textScore);
-        this.textScore2 = (TextView) findViewById(R.id.textScore2);
-        this.nomAdvers = (TextView) findViewById(R.id.textNom2);
-        this.avatarRAdvers = (ImageView) findViewById(R.id.img2);
 
-        // On met à jout le nom, la couleur du nom et l'avatar
-        // en fonction de la séléction précédante
-        this.nomAdvers.setText(getIntent().getExtras().getString("nom"));
-        this.avatarRAdvers.setImageResource(getIntent().getExtras().getInt("avatar"));
-        this.nomAdvers.setTextColor(ContextCompat.getColor(getApplicationContext(), getIntent().getExtras().getInt("color")));
-        this.textScore2.setTextColor(ContextCompat.getColor(getApplicationContext(), getIntent().getExtras().getInt("color")));
     }
 
     /**
@@ -166,40 +198,14 @@ public class QuizActivity extends AppCompatActivity {
      */
     private void initProgressBar() {
 
-        // Bar de progression
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        // Compteur de temps
-        time = (TextView) findViewById(R.id.textTimer);
-        time.setText(Integer.toString(infoSec));
 
         // Nouveau Thread
-        new Thread(new Runnable() {
+        thread = new Thread(new Runnable() {
             @Override
             public void run() {
 
                 while (progressStatus < 10 && !timeOut) {
 
-                    // On incrémante le status de la bar
-                    progressStatus++;
-
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-
-                            // Mise à jour de la bar
-                            progressBar.setProgress(progressStatus);
-                            infoSec --;
-                            // Mise à jour du compteur
-                            time.setText(Integer.toString(infoSec));
-
-                            if(infoSec == 0) {
-                                time.setText("TIME OUT");
-                                time.setTextColor(Color.RED);
-
-                                winButton();
-                            }
-                        }
-                    });
                     // Attente de 1 seconde pour
                     // raffraichir la bar de progression
                     // ainsi que le compteur
@@ -209,10 +215,35 @@ public class QuizActivity extends AppCompatActivity {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
+
+                    // On incrémante le status de la bar
+                    progressStatus++;
+                    infoSec --;
+
+                    handler.post(new Runnable() {
+
+                        @Override
+                        public void run() {
+
+                            // Mise à jour de la bar
+                            progressBar.setProgress(progressStatus);
+
+                            // Mise à jour du compteur
+                            time.setText(Integer.toString(infoSec));
+
+                            if(infoSec == 0) {
+                                time.setText("TIME OUT");
+                                time.setTextColor(Color.RED);
+                                winButton();
+                                reinitialise();
+                            }
+                        }
+                    });
                 }
-                timeOut = true;
             }
-        }).start();// Demarrage du service
+        });
+
+        this.thread.start();// Demarrage du service
     }
 
 
@@ -334,8 +365,6 @@ public class QuizActivity extends AppCompatActivity {
      */
     private void checkButton(Button button) {
 
-        this.timeOut = true;
-
         // Si la reponse est fausse
         if (!button.getText().toString().equals(this.getGoodAnswer())) {
             // On color en rouge la mauvaise reponse
@@ -375,6 +404,7 @@ public class QuizActivity extends AppCompatActivity {
             this.winButton();
         }
 
+
     }
 
     /**
@@ -394,6 +424,21 @@ public class QuizActivity extends AppCompatActivity {
                 // essai de jouer encore
                 b.setOnClickListener(null);
             }
+        }
+    }
+
+    /**
+     * Méthode de réinitialisation
+     * de l'activité
+     */
+    private void reinitialise() {
+
+        try {
+            this.time.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorAccent));
+            this.initQuestion();
+            this.initData();
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 }
