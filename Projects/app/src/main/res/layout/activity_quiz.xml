@@ -91,7 +91,7 @@
             android:layout_below="@id/textNom1"
             android:layout_centerInParent="true"
             android:textColor="@color/colorAccent"
-            android:textSize="40dp"/>
+            android:textSize="30dp"/>
 
         <!-- 1 textView question -->
 

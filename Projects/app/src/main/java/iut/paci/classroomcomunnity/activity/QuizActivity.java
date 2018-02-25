@@ -1,10 +1,10 @@
 package iut.paci.classroomcomunnity.activity;
 
 import android.graphics.Color;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -12,16 +12,28 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 import iut.paci.classroomcomunnity.R;
+import iut.paci.classroomcomunnity.bean.Question;
 
 public class QuizActivity extends AppCompatActivity {
 
     // Élémént graphique
     private final List<Button> LISTBUTTON = new ArrayList<Button>();
-    private final String GOODANSWER = "Wifi";
+    private String goodAnswer;
+    private TextView question;
     private ProgressBar progressBar;
     private TextView time;
     private TextView textScore1;
@@ -35,6 +47,8 @@ public class QuizActivity extends AppCompatActivity {
     private boolean timeOut = false;
     private int score1 = 0;
     private int score2 = 0;
+    private List<Question> questionList = new ArrayList<>();
+    private Question randomQuestion;
 
 
     private List<Button> getListButton() {
@@ -42,7 +56,12 @@ public class QuizActivity extends AppCompatActivity {
     }
 
     private String getGoodAnswer() {
-        return GOODANSWER;
+        return this.goodAnswer;
+    }
+
+    private void setGoodAnswer(String a) {
+
+        this.goodAnswer = a;
     }
 
     @Override
@@ -50,8 +69,13 @@ public class QuizActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
 
-        this.initButton();
-        this.initProgressBar();
+        try {
+            this.initQuestion();
+            this.initButton();
+            this.initProgressBar();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
 
 
@@ -90,14 +114,28 @@ public class QuizActivity extends AppCompatActivity {
      */
     private void initButton() {
 
+
+        List<String> rep = this.randomQuestion.getReponseText();
+
+        Collections.shuffle(rep);
+
+
         // Création de la liste de bouton
         this.getListButton().add((Button) findViewById(R.id.b1));
         this.getListButton().add((Button) findViewById(R.id.b2));
         this.getListButton().add((Button) findViewById(R.id.b3));
         this.getListButton().add((Button) findViewById(R.id.b4));
 
+        int i = 0;
         // Ajout du listeneur à tous les boutons
+        // et du text sur les questions
         for(final Button b : this.getListButton()) {
+            b.setText(rep.get(i).toString());
+            // On enregistre la bonne reponse pour la suite
+            if (this.randomQuestion.getReponses().get(b.getText()))
+                this.setGoodAnswer(rep.get(i).toString());
+
+            i++;
             b.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -106,6 +144,8 @@ public class QuizActivity extends AppCompatActivity {
             });
         }
 
+        this.question = (TextView) findViewById(R.id.textQuestion);
+        this.question.setText(this.randomQuestion.getQuestion());
         this.textScore1 = (TextView) findViewById(R.id.textScore);
         this.textScore2 = (TextView) findViewById(R.id.textScore2);
         this.nomAdvers = (TextView) findViewById(R.id.textNom2);
@@ -177,6 +217,114 @@ public class QuizActivity extends AppCompatActivity {
 
 
     /**
+     * Méthode d'initialisation de la question
+     * et des reponses
+     * @throws JSONException
+     */
+    private void initQuestion() throws JSONException {
+
+        this.generQuestion();
+        this.chooseQuestion();
+
+    }
+
+
+    /**
+     * Méthode qui ve permettre de choisir au hasard une question
+     */
+    private void chooseQuestion() {
+
+        Random random = new Random();
+        int randomInt = showRandomInteger(0,this.questionList.size()-1, random);
+        this.randomQuestion = questionList.get(randomInt);
+
+    }
+
+
+    /**
+     * Méthode qui renvoie un chiffre au hasard
+     * @param aStart
+     * @param aEnd
+     * @param aRandom
+     * @return
+     */
+    private int showRandomInteger(int aStart, int aEnd, Random aRandom){
+
+        //get the range, casting to long to avoid overflow problems
+        long range = (long)aEnd - (long)aStart + 1;
+        // compute a fraction of the range, 0 <= frac < range
+        long fraction = (long)(range * aRandom.nextDouble());
+        int randomNumber =  (int)(fraction + aStart);
+
+        return randomNumber;
+    }
+
+
+    /**
+     * Méthode qui permet de convertir les questions et
+     * reponses du fichier Json en Objet Question
+     * @throws JSONException
+     */
+    private void generQuestion() throws JSONException {
+
+        String json = null;
+        try {
+
+            JSONObject obj = new JSONObject(this.getJson());
+            JSONArray jsonArray = obj.getJSONArray("questions");
+
+            // On parcours les questions
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                String question = jsonObject.getString("question");
+                JSONArray questionsAnswers = jsonObject.getJSONArray("answers");
+
+                HashMap<String, Boolean> reponse = new HashMap<>();
+
+                // On parcour les réponses de chaque question
+                for (int j = 0; j < questionsAnswers.length(); j++) {
+                    JSONObject jsonObjectAnswer = questionsAnswers.getJSONObject(j);
+                    String rep = jsonObjectAnswer.getString("answer");
+                    Boolean stat = jsonObjectAnswer.getBoolean("status");
+                    reponse.put(rep, stat);
+                }
+
+                // On ajoute à la liste la question et la Map de reponse
+                questionList.add(new Question(question, reponse));
+            }
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * Extraction des données du fichier JSON
+     * @return
+     * @throws IOException
+     */
+    private String getJson() throws IOException {
+
+        String json = null;
+
+        // On ouvre le Flux vers le fichier
+        InputStream is = getResources().openRawResource(R.raw.question);
+        int size = is.available();
+        byte[] buffer = new byte[size];
+        is.read(buffer);
+        is.close();
+        // Convertion en String de la lecture
+        json = new String(buffer, "UTF-8");
+
+        // On retourne le resultat
+        return json;
+
+    }
+
+
+    /**
      * Méthode de vérification de l'événement
      * effectuer sur un bouton.
      * Nous vérifions ici si le bouton cliqué
@@ -235,7 +383,7 @@ public class QuizActivity extends AppCompatActivity {
     private void winButton() {
 
         for (Button b : this.getListButton()) {
-            if (!b.getText().toString().equals(this.GOODANSWER)) {
+            if (!b.getText().toString().equals(this.getGoodAnswer())) {
                 b.setBackgroundResource(R.color.otherResp);
                 b.setPadding(0,0,0,0);
                 b.setEnabled(false);

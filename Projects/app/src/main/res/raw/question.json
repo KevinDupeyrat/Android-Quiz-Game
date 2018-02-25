@@ -1,0 +1,88 @@
+{
+  "questions" : [
+    {
+      "question": "Quel est le vrai nom du personnage Gollum avant sa transformation ?",
+      "answers": [
+        {
+          "answer": "Frodo",
+          "status": false
+        },
+        {
+          "answer": "Gandalf",
+          "status": false
+        },
+        {
+          "answer": "Sauron",
+          "status": false
+        },
+        {
+          "answer": "Sméagol",
+          "status": true
+        }
+      ]
+    },
+    {
+      "question": "Comment s'appelle le chat qui est à la fois mort et vivant dans sa boite ?",
+      "answers": [
+        {
+          "answer": "le chat de schrodinger",
+          "status": true
+        },
+        {
+          "answer": "Le chat Potté",
+          "status": false
+        },
+        {
+          "answer": "Garfild",
+          "status": false
+        },
+        {
+          "answer": "La chatte Grumpy Cat",
+          "status": false
+        }
+      ]
+    },
+    {
+      "question": "Quel est le Robin tué par le Jocker ?",
+      "answers": [
+        {
+          "answer": "Dick Grayson",
+          "status": false
+        },
+        {
+          "answer": "Jason Todd",
+          "status": true
+        },
+        {
+          "answer": "Tim Drake",
+          "status": false
+        },
+        {
+          "answer": "Stéphanie Brown",
+          "status": false
+        }
+      ]
+    },
+    {
+      "question":"Quel est le médecin dans la série Star Trek ?",
+      "answers": [
+        {
+          "answer":"Leonard McCoy",
+          "status":true
+        },
+        {
+          "answer":"James T. Kirk",
+          "status":false
+        },
+        {
+          "answer":"Hikaru Sulu",
+          "status":false
+        },
+        {
+          "answer":"Uhura",
+          "status":false
+        }
+      ]
+    }
+  ]
+}

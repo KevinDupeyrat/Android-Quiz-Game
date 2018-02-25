@@ -1,7 +1,10 @@
 package iut.paci.classroomcomunnity.bean;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by dupeyrat on 24/02/18.
@@ -10,9 +13,9 @@ import java.util.Map;
 public class Question {
 
     private String question;
-    private Map<String, Boolean> reponse;
+    private HashMap<String, Boolean> reponse;
 
-    public Question(String q, Map<String, Boolean> r) {
+    public Question(String q, HashMap<String, Boolean> r) {
 
         this.question = q;
         this.reponse = r;
@@ -28,11 +31,22 @@ public class Question {
         this.question = question;
     }
 
-    public Map<String, Boolean> getReponse() {
+    public Map<String, Boolean> getReponses() {
         return reponse;
     }
 
-    public void setReponse(Map<String, Boolean> reponse) {
+    public List<String> getReponseText() {
+
+        List<String> list = new ArrayList<>();
+
+        for (HashMap.Entry<String, Boolean> entry : reponse.entrySet()) {
+            list.add(entry.getKey());
+        }
+
+        return list;
+    }
+
+    public void setReponse(HashMap<String, Boolean> reponse) {
         this.reponse = reponse;
     }
 }
