@@ -240,6 +240,7 @@ public class QuizActivity extends AppCompatActivity {
                         }
                     });
                 }
+
             }
         });
 
@@ -292,66 +293,16 @@ public class QuizActivity extends AppCompatActivity {
 
 
     /**
-     * Méthode qui permet de convertir les questions et
-     * reponses du fichier Json en Objet Question
+     * Génération de la question aléatoire dans le fichier JSON
      * @throws JSONException
      */
-    private void generQuestion() throws JSONException {
+    public void generQuestion() throws JSONException {
 
-        String json = null;
-        try {
-
-            JSONObject obj = new JSONObject(this.getJson());
-            JSONArray jsonArray = obj.getJSONArray("questions");
-
-            // On parcours les questions
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject jsonObject = jsonArray.getJSONObject(i);
-                String question = jsonObject.getString("question");
-                JSONArray questionsAnswers = jsonObject.getJSONArray("answers");
-
-                HashMap<String, Boolean> reponse = new HashMap<>();
-
-                // On parcour les réponses de chaque question
-                for (int j = 0; j < questionsAnswers.length(); j++) {
-                    JSONObject jsonObjectAnswer = questionsAnswers.getJSONObject(j);
-                    String rep = jsonObjectAnswer.getString("answer");
-                    Boolean stat = jsonObjectAnswer.getBoolean("status");
-                    reponse.put(rep, stat);
-                }
-
-                // On ajoute à la liste la question et la Map de reponse
-                questionList.add(new Question(question, reponse));
-            }
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    /**
-     * Extraction des données du fichier JSON
-     * @return
-     * @throws IOException
-     */
-    private String getJson() throws IOException {
-
-        String json = null;
-
-        // On ouvre le Flux vers le fichier
-        InputStream is = getResources().openRawResource(R.raw.question);
-        int size = is.available();
-        byte[] buffer = new byte[size];
-        is.read(buffer);
-        is.close();
-        // Convertion en String de la lecture
-        json = new String(buffer, "UTF-8");
-
-        // On retourne le resultat
-        return json;
-
+        // On ajoute à la liste la question et la Map de reponse
+        this.questionList.add(
+                JsonTools.getQuestion(
+                        getResources().openRawResource(
+                                R.raw.question)));
     }
 
 
