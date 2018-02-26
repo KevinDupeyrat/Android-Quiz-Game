@@ -20,6 +20,7 @@ import android.widget.Toast;
 import iut.paci.classroomcomunnity.R;
 import iut.paci.classroomcomunnity.frame.AboutFragment;
 import iut.paci.classroomcomunnity.frame.FriendFragment;
+import iut.paci.classroomcomunnity.frame.HomeFragment;
 import iut.paci.classroomcomunnity.frame.PresentFragment;
 import iut.paci.classroomcomunnity.frame.SettingFragment;
 
@@ -65,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
         // Synchronisation du toggle avec le Drower
         toggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        nav.getMenu().performIdentifierAction(R.id.nav_home, 0);
 
     }
 
@@ -96,7 +98,6 @@ public class MainActivity extends AppCompatActivity {
     public void selectDrawerItem(MenuItem menuItem) {
 
         ((FrameLayout)findViewById(R.id.contentFrame)).setBackground(null);
-        ((TextView)findViewById(R.id.textWelcome)).setText("");
 
         // Creation d'un nouveau fragment que nous mettrons à la place
         // de celle par défaut
@@ -115,13 +116,11 @@ public class MainActivity extends AppCompatActivity {
             case R.id.nav_about:
                 fragmentClass = AboutFragment.class;
                 break;
+            case R.id.nav_home:
+                fragmentClass = HomeFragment.class;
+                break;
             case R.id.nav_logout:
                 this.finish();
-                return;
-            case R.id.nav_home:
-                // TODO: Faire revenir à l'écran principal (fermeture des fragments)
-                Toast.makeText(this, "Fonctionnalité non implémenté encore ...", Toast.LENGTH_SHORT).show();
-                drawer.closeDrawer(GravityCompat.START);
                 return;
             default:
                 fragmentClass = null;

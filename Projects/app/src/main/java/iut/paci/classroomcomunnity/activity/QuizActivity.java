@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -13,15 +14,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -182,13 +178,19 @@ public class QuizActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     timeOut = true;
                     checkButton(b);
-                    reinitialise();
+                    (new Handler()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            doWait();
+                            reinitialise();
+                        }
+                    });
+
                 }
             });
         }
 
         this.question.setText(this.randomQuestion.getQuestion());
-
     }
 
     /**
@@ -198,27 +200,12 @@ public class QuizActivity extends AppCompatActivity {
      */
     private void initProgressBar() {
 
-
         // Nouveau Thread
         thread = new Thread(new Runnable() {
             @Override
             public void run() {
 
-                while (progressStatus < 10 && !timeOut) {
-
-                    // Attente de 1 seconde pour
-                    // raffraichir la bar de progression
-                    // ainsi que le compteur
-                    try {
-                        // Attente de 1 seconde
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-
-                    // On incrémante le status de la bar
-                    progressStatus++;
-                    infoSec --;
+                while (progressStatus <= 10 && !timeOut) {
 
                     handler.post(new Runnable() {
 
@@ -231,14 +218,23 @@ public class QuizActivity extends AppCompatActivity {
                             // Mise à jour du compteur
                             time.setText(Integer.toString(infoSec));
 
-                            if(infoSec == 0) {
+                            Log.i("Dans le Runnable", ""+progressBar);
+                            if(progressStatus == 10) {
+                                Log.i("Dans le Runnable", "JE SUIS DANS LE IF");
                                 time.setText("TIME OUT");
                                 time.setTextColor(Color.RED);
                                 winButton();
+                                doWait();
                                 reinitialise();
                             }
                         }
                     });
+
+                    doWait();
+                    // On incrémante le status de la bar
+                    progressStatus++;
+                    infoSec --;
+
                 }
 
             }
@@ -299,10 +295,9 @@ public class QuizActivity extends AppCompatActivity {
     public void generQuestion() throws JSONException {
 
         // On ajoute à la liste la question et la Map de reponse
-        this.questionList.add(
-                JsonTools.getQuestion(
+        this.questionList = JsonTools.getQuestion(
                         getResources().openRawResource(
-                                R.raw.question)));
+                                R.raw.question));
     }
 
 
@@ -354,8 +349,6 @@ public class QuizActivity extends AppCompatActivity {
             // On désactive tous les autres boutons
             this.winButton();
         }
-
-
     }
 
     /**
@@ -385,11 +378,32 @@ public class QuizActivity extends AppCompatActivity {
     private void reinitialise() {
 
         try {
+            // On repet la bar de progression à 0
+            progressBar.setProgress(0);
+            // On remet la couleur d'origine au compteur
             this.time.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorAccent));
+            // On réinitialise la question
             this.initQuestion();
+            // On réinitialise les données
             this.initData();
+            // On relance le Thread
+            this.thread.start();
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * On fait une petite pause d'une seconde
+     */
+    private void doWait() {
+
+        try {
+            // Attente de 1 seconde
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
     }
 }

@@ -6,7 +6,9 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import iut.paci.classroomcomunnity.R;
 import iut.paci.classroomcomunnity.bean.Question;
@@ -22,9 +24,10 @@ public class JsonTools {
      * reponses du fichier Json en Objet Question
      * @throws JSONException
      */
-    public static Question getQuestion(InputStream ressources) throws JSONException {
+    public static List<Question> getQuestion(InputStream ressources) throws JSONException {
 
         String json = null;
+        List<Question> questionList = new ArrayList<>();
         try {
 
             JSONObject obj = new JSONObject(getJson(ressources));
@@ -46,7 +49,7 @@ public class JsonTools {
                     reponse.put(rep, stat);
                 }
 
-                return new Question(question, reponse);
+                questionList.add(new Question(question, reponse));
             }
 
 
@@ -54,7 +57,7 @@ public class JsonTools {
             e.printStackTrace();
         }
 
-        return null;
+        return questionList;
     }
 
 
