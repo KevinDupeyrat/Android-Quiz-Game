@@ -67,8 +67,9 @@ public class FriendAdapter extends ArrayAdapter<Amis> {
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
         View layout = convertView;
+        Amis ami = amisList.get(position);
         // Pour tous les amis sauf pour nous (je suis l'ID 11 dans la liste)
-        if(amisList.get(position).getId() != 11) {
+        if(ami.getId() != 11) {
 
 
             // On vérifi que la View est vide avant de
@@ -80,21 +81,21 @@ public class FriendAdapter extends ArrayAdapter<Amis> {
 
             // Récupération de la textView et de l'imageView
             TextView nameFriend = (TextView) layout.findViewById(R.id.nameFriend);
+            TextView lastScoreFriend = (TextView) layout.findViewById(R.id.lastScoreFriend);
             ImageView connected = (ImageView) layout.findViewById(R.id.connected);
             TextView initial = (TextView) layout.findViewById(R.id.initial);
 
 
-            if(amisList.get(position).isPresent() == 0) {
+            if(ami.isPresent() == 0) {
                 connected.setBackgroundColor(Color.RED);
             }
 
 
             // On met à jour ces deux views avec les information
             // sur l'amis séléctionné
-            nameFriend.setText(amisList.get(position).getNom());
-            //nameFriend.setTextColor(this.context.getResources().getColor(amisList.get(position).getColorRessource()));
-            initial.setText(String.valueOf(amisList.get(position).getNom().charAt(0)));
-            //avatarFriend.setImageResource(amisList.get(position).getAvatarRessource());
+            nameFriend.setText(ami.getNom());
+            initial.setText(String.valueOf(ami.getNom().charAt(0)));
+            lastScoreFriend.setText("Dernier score : " + ami.getLastScore());
 
         }
         // On retourne le Layout modifié
