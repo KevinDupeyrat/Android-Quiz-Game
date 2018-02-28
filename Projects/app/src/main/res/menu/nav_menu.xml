@@ -14,11 +14,6 @@
             android:icon="@drawable/ic_group_black_24dp"
             android:title="@string/friend"/>
 
-        <item
-            android:id="@+id/nav_present"
-            android:icon="@drawable/ic_person_pin_circle_black_24dp"
-            android:title="Présence"/>
-
 
         <item
             android:id="@+id/nav_setting"
@@ -31,10 +26,14 @@
             android:title="@string/about"/>
 
         <item
+            android:id="@+id/nav_photo"
+            android:icon="@drawable/ic_center_focus_strong_black_24dp"
+            android:title="@string/scan_code"/>
+
+        <item
             android:id="@+id/nav_logout"
             android:icon="@drawable/ic_power_settings_new_black_24dp"
             android:title="@string/logout"/>
-
 
 
     </group>

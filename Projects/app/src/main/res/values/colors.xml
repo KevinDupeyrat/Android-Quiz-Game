@@ -18,5 +18,6 @@
 
     <color name="manColor">#0040FF</color>
     <color name="womanColor">#FF00FF</color>
+    <color name="colorCircle">#DF7401</color>
 
 </resources>

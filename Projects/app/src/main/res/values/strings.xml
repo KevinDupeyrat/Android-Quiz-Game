@@ -3,26 +3,24 @@
     <string name="ident" translatable="false">Username</string>
     <string name="mdp" translatable="false">Password</string>
     <string name="boutonValid" translatable="false">Connect</string>
-    <string name="welcome_to_my_world">Welcome to my world ...</string>
+    <string name="welcome_home">Welcome to QuizAcademy</string>
     <string name="wifi">Wifi</string>
     <string name="bluetooth">Bluetooth</string>
     <string name="infrarouge">Infrarouge</string>
     <string name="gsm">Gsm</string>
-    <string name="question">Quelle technologie permet de se connecter à un réseau sans fil ?</string>
+    <string name="question">What technology can connect to a wireless network?</string>
     <string name="nom1">Ahmed CHAOU</string>
     <string name="nom2">Kevin.D</string>
     <string name="score2">0</string>
     <string name="score1">0</string>
-    <string name="friend">Amis</string>
+    <string name="friend">Friends</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="Setting">Paramètres</string>
-    <string name="about">À propos</string>
-    <string name="welcome">Welcome !! Choose your friend</string>
-    <string name="logout">déconnexion</string>
+    <string name="Setting">Settings</string>
+    <string name="about">About</string>
+    <string name="logout">Sign out</string>
     <string name="home">Home</string>
+    <string name="scan_code">QR code Scan</string>
 
 </resources>

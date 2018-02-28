@@ -4,5 +4,18 @@
     <string name="ident" translatable="false">Identifiant</string>
     <string name="mdp" translatable="false">Mot de passe</string>
     <string name="boutonValid" translatable="false">Se connecter</string>
-    <string name="welcome_to_my_world">Bienvenue dans mon monde ...</string>
+    <string name="welcome_home">Bienvenue dans QuizAcademy</string>
+    <string name="wifi">Wifi</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="infrarouge">Infrarouge</string>
+    <string name="gsm">Gsm</string>
+    <string name="question">Quelle technologie permet de se connecter à un réseau sans fil ?</string>
+    <string name="friend">Amis</string>
+    <string name="open">Ouvrir</string>
+    <string name="close">Fermer</string>
+    <string name="Setting">Paramètres</string>
+    <string name="about">À propos</string>
+    <string name="logout">Déconnexion</string>
+    <string name="home">Accueil</string>
+    <string name="scan_code">Scanner un QR code</string>
 </resources>

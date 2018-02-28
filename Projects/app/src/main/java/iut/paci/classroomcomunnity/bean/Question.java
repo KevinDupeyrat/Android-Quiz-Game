@@ -1,21 +1,30 @@
 package iut.paci.classroomcomunnity.bean;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by dupeyrat on 24/02/18.
+ *
+ * Class qui représente une Question.
+ * Elle est composé d'une Question et d'une liste
+ * de reponses
  */
 
 public class Question {
 
-    private String question;
-    private HashMap<String, Boolean> reponse;
+    // TODO: @SerializedName("") avec le bon nom
 
-    public Question(String q, HashMap<String, Boolean> r) {
+    @SerializedName("question")
+    private String question;
+    @SerializedName("answers")
+    private HashMap<Reponse, Boolean> reponse;
+
+    public Question(String q, HashMap<Reponse, Boolean> r) {
 
         this.question = q;
         this.reponse = r;
@@ -31,7 +40,7 @@ public class Question {
         this.question = question;
     }
 
-    public Map<String, Boolean> getReponses() {
+    public Map<Reponse, Boolean> getReponses() {
         return reponse;
     }
 
@@ -39,14 +48,14 @@ public class Question {
 
         List<String> list = new ArrayList<>();
 
-        for (HashMap.Entry<String, Boolean> entry : reponse.entrySet()) {
-            list.add(entry.getKey());
+        for (HashMap.Entry<Reponse, Boolean> entry : reponse.entrySet()) {
+            list.add(entry.getKey().getReponse());
         }
 
         return list;
     }
 
-    public void setReponse(HashMap<String, Boolean> reponse) {
+    public void setReponse(HashMap<Reponse, Boolean> reponse) {
         this.reponse = reponse;
     }
 }

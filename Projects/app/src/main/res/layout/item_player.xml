@@ -4,16 +4,43 @@
     android:layout_height="match_parent"
     android:orientation="horizontal">
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/avatarFiend"
-        android:layout_width="60dp"
-        android:layout_height="60dp" />
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/avatarFiend"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@color/colorCircle"/>
+
+        <TextView
+            android:id="@+id/initial"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="A"
+            android:textSize="20dp" />
+
+    </RelativeLayout>
+
+
 
     <TextView
         android:id="@+id/nameFriend"
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
         android:textSize="20dp"
         android:textColor="@color/colorAccent"/>
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/connected"
+        android:layout_width="5dp"
+        android:layout_height="5dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="10dp"
+        android:background="@drawable/circle_present" />
     
 </LinearLayout>

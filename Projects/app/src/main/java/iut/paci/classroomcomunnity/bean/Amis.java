@@ -1,5 +1,8 @@
 package iut.paci.classroomcomunnity.bean;
 
+import com.google.gson.annotations.SerializedName;
+
+
 /**
  * Created by dupeyrat on 18/02/18.
  *
@@ -9,22 +12,37 @@ package iut.paci.classroomcomunnity.bean;
 
 public class Amis {
 
+    @SerializedName("id")
+    private int id;
+    @SerializedName("first_name")
     private String nom;
-    private int avatarRessource;
-    private int colorRessource;
+    @SerializedName("last_name")
+    private String prenom;
+    @SerializedName("is_present")
+    private int present;
+    @SerializedName("photo_path")
+    private String ressourseAvatar;
+    @SerializedName("last_score")
+    private int lastScore;
 
-    public Amis(String nom, int avatarRessource, int colorRessource) {
+    public Amis(int id, String nom, String prenom, int present, String avatar, int ls) {
+
+        this.id = id;
         this.nom = nom;
-        this.avatarRessource = avatarRessource;
-        this.colorRessource = colorRessource;
+        this.prenom = prenom;
+        this.present = present;
+        this.ressourseAvatar = avatar;
+        this.lastScore = ls;
+
     }
 
-    public int getColorRessource() {
-        return colorRessource;
+
+    public int getId() {
+        return id;
     }
 
-    public void setColorRessource(int colorRessource) {
-        this.colorRessource = colorRessource;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getNom() {
@@ -35,11 +53,35 @@ public class Amis {
         this.nom = nom;
     }
 
-    public int getAvatarRessource() {
-        return avatarRessource;
+    public String getPrenom() {
+        return prenom;
     }
 
-    public void setAvatarRessource(int avatarRessource) {
-        this.avatarRessource = avatarRessource;
+    public void setPrenom(String prenom) {
+        this.prenom = prenom;
+    }
+
+    public int isPresent() {
+        return present;
+    }
+
+    public void setPresent(int present) {
+        this.present = present;
+    }
+
+    public int getLastScore() {
+        return lastScore;
+    }
+
+    public void setLastScore(int lastScore) {
+        this.lastScore = lastScore;
+    }
+
+    public String getRessourseAvatar() {
+        return ressourseAvatar;
+    }
+
+    public void setRessourseAvatar(String ressourseAvatar) {
+        this.ressourseAvatar = ressourseAvatar;
     }
 }

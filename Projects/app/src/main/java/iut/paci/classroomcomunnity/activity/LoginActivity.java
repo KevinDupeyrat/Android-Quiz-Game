@@ -68,6 +68,9 @@ public class LoginActivity extends AppCompatActivity {
                         Log.i(TAG, "Identifiant ou mot de passe incorrecte !");
                     } else {
 
+                        identifiant.setText("");
+                        pass.setText("");
+
                         // Création d'un Intent (activité)
                         // Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);

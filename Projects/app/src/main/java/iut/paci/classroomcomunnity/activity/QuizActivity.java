@@ -14,6 +14,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
+import com.koushikdutta.ion.Response;
+
 import org.json.JSONException;
 
 import java.util.ArrayList;
@@ -35,7 +39,7 @@ public class QuizActivity extends AppCompatActivity {
     private TextView textScore1;
     private TextView textScore2;
     private TextView nomAdvers;
-    private ImageView avatarRAdvers;
+    private TextView avatarRAdvers;
 
     private Thread thread;
     private Handler handler;
@@ -46,6 +50,7 @@ public class QuizActivity extends AppCompatActivity {
     private int score2 = 0;
     private List<Question> questionList = new ArrayList<>();
     private Question randomQuestion;
+    private String json;
 
 
     private List<Button> getListButton() {
@@ -123,12 +128,12 @@ public class QuizActivity extends AppCompatActivity {
         this.textScore1 = (TextView) findViewById(R.id.textScore);
         this.textScore2 = (TextView) findViewById(R.id.textScore2);
         this.nomAdvers = (TextView) findViewById(R.id.textNom2);
-        this.avatarRAdvers = (ImageView) findViewById(R.id.img2);
+        this.avatarRAdvers = (TextView) findViewById(R.id.initialQuiz);
 
         // On met à jout le nom, la couleur du nom et l'avatar
         // en fonction de la séléction précédante
         this.nomAdvers.setText(getIntent().getExtras().getString("nom"));
-        this.avatarRAdvers.setImageResource(getIntent().getExtras().getInt("avatar"));
+        this.avatarRAdvers.setText(String.valueOf(getIntent().getExtras().getString("nom").charAt(0)));
         this.nomAdvers.setTextColor(ContextCompat.getColor(getApplicationContext(), getIntent().getExtras().getInt("color")));
         this.textScore2.setTextColor(ContextCompat.getColor(getApplicationContext(), getIntent().getExtras().getInt("color")));
 
@@ -252,7 +257,7 @@ public class QuizActivity extends AppCompatActivity {
     private void initQuestion() throws JSONException {
 
         this.generQuestion();
-        this.chooseQuestion();
+       // this.chooseQuestion();
 
     }
 
@@ -260,13 +265,13 @@ public class QuizActivity extends AppCompatActivity {
     /**
      * Méthode qui ve permettre de choisir au hasard une question
      */
-    private void chooseQuestion() {
+   /* private void chooseQuestion() {
 
         Random random = new Random();
         int randomInt = showRandomInteger(0,this.questionList.size()-1, random);
         this.randomQuestion = questionList.get(randomInt);
 
-    }
+    } */
 
 
     /**
@@ -292,12 +297,62 @@ public class QuizActivity extends AppCompatActivity {
      * Génération de la question aléatoire dans le fichier JSON
      * @throws JSONException
      */
-    public void generQuestion() throws JSONException {
+    public void generQuestion()  {
 
+
+
+
+        Ion.with(getApplicationContext()) //998889235
+                .load("http://192.168.137.1/classroom_server/getQuestions.php?key=paci.iut.1235")
+                .asString()
+                .withResponse()
+                .setCallback(new FutureCallback<Response<String>>() {
+                    @Override
+                    public void onCompleted(Exception e, Response<String> response) {
+
+
+
+                        if(response == null){
+
+                            Log.e("Chargement des amis","Pas de reponse du serveur");
+
+
+                        } else {
+
+                            Log.i("Resultat", response.getResult());
+
+                            switch (response.getHeaders().code()) {
+                                case 404:
+                                    Toast.makeText(getApplicationContext(), "Erreur 404 page not found !", Toast.LENGTH_SHORT).show();
+                                    break;
+                                case 403:
+                                    Toast.makeText(getApplicationContext(), "Erreur 404 page not found !", Toast.LENGTH_SHORT).show();
+                                    break;
+                                default:
+                                    break;
+                            }
+
+
+                            if(response.getResult().equals("{\"error\" : \"Wrong key !!!\"}")) {
+
+                                Toast.makeText(getApplicationContext(), "ERREUR Mauvaise cles !!", Toast.LENGTH_SHORT).show();
+
+
+
+                            } else {
+
+                                json = response.getResult();
+
+                            }
+                        }
+
+                    }
+                });
+
+
+        Log.i("Question", json);
         // On ajoute à la liste la question et la Map de reponse
-        this.questionList = JsonTools.getQuestion(
-                        getResources().openRawResource(
-                                R.raw.question));
+        this.randomQuestion = JsonTools.getQuestion(json);
     }
 
 

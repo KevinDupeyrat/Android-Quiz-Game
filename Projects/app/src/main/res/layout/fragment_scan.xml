@@ -2,8 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/construction"
-    tools:context="iut.paci.classroomcomunnity.frame.PresentFragment">
+    android:id="@+id/photoFragment"
+    tools:context="iut.paci.classroomcomunnity.frame.ScanFragment">
 
     <!-- TODO: Update blank fragment layout -->
 

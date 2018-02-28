@@ -4,5 +4,18 @@
     <string name="ident" translatable="false">Username</string>
     <string name="mdp" translatable="false">Password</string>
     <string name="boutonValid" translatable="false">Connect</string>
-    <string name="welcome_to_my_world">Welcome to my world ...</string>
+    <string name="welcome_home">Welcome to QuizAcademy</string>
+    <string name="wifi">Wifi</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="infrarouge">Infrared</string>
+    <string name="gsm">Gsm</string>
+    <string name="question">What technology can connect to a wireless network?</string>
+    <string name="friend">Friends</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+    <string name="Setting">Settings</string>
+    <string name="about">About</string>
+    <string name="logout">Sign out</string>
+    <string name="home">Home</string>
+    <string name="scan_code">QR code Scan</string>
 </resources>

@@ -1,86 +1,66 @@
 package iut.paci.classroomcomunnity.activity;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
 import java.util.List;
-
-import iut.paci.classroomcomunnity.R;
+import iut.paci.classroomcomunnity.bean.Amis;
 import iut.paci.classroomcomunnity.bean.Question;
 
 /**
  * Created by dupeyrat on 26/02/18.
+ *
+ * Class Outil pour la gestion des fichier Json
+ * Elle permetra de générer à partir de fichier Json
+ * des Objets
  */
 
 public class JsonTools {
 
+
     /**
-     * Méthode qui permet de convertir les questions et
-     * reponses du fichier Json en Objet Question
-     * @throws JSONException
+     * Méthode qui permet de récupérer les question/reponses
+     * d'un fichier JSON vers un objet Question
+     * Utilisation de l'API GSON de Google
+     * @param json
+     * @return
      */
-    public static List<Question> getQuestion(InputStream ressources) throws JSONException {
+    public static Question getQuestion(String json) {
 
-        String json = null;
-        List<Question> questionList = new ArrayList<>();
-        try {
+        Gson gson = new Gson();
+        Question question = gson.fromJson(json, Question.class);
 
-            JSONObject obj = new JSONObject(getJson(ressources));
-            JSONArray jsonArray = obj.getJSONArray("questions");
+        return question;
+    }
 
-            // On parcours les questions
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject jsonObject = jsonArray.getJSONObject(i);
-                String question = jsonObject.getString("question");
-                JSONArray questionsAnswers = jsonObject.getJSONArray("answers");
+    /**
+     * Méthode qui permet de convertir un fichier Json
+     * passé en paramètre en une liste
+     * de Question qui est renvoyé
+     */
+    public static List<Amis> getAmis(String json) {
 
-                HashMap<String, Boolean> reponse = new HashMap<>();
-
-                // On parcour les réponses de chaque question
-                for (int j = 0; j < questionsAnswers.length(); j++) {
-                    JSONObject jsonObjectAnswer = questionsAnswers.getJSONObject(j);
-                    String rep = jsonObjectAnswer.getString("answer");
-                    Boolean stat = jsonObjectAnswer.getBoolean("status");
-                    reponse.put(rep, stat);
-                }
-
-                questionList.add(new Question(question, reponse));
-            }
+        Gson gson = new Gson();
+        Type type = new TypeToken<List<Amis>>(){}.getType();
+        List<Amis> amisList = gson.fromJson(json, type);
 
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return questionList;
+        return amisList;
     }
 
 
     /**
-     * Extraction des données du fichier JSON
+     * Méthode qui permet de convertir un fichier Json
+     * passé en paramètre en un Objet Amis qui est renvoyer
+     * @param json
      * @return
-     * @throws IOException
      */
-    private static String getJson(InputStream ressources) throws IOException {
+    private static Amis getUnAmis(String json) {
 
-        String json = null;
+        Gson gson = new Gson();
+        Amis amis = gson.fromJson(json, Amis.class);
 
-        // On ouvre le Flux vers le fichier
-        InputStream is = ressources;
-        int size = is.available();
-        byte[] buffer = new byte[size];
-        is.read(buffer);
-        is.close();
-        // Convertion en String de la lecture
-        json = new String(buffer, "UTF-8");
 
-        // On retourne le resultat
-        return json;
-
+        return amis;
     }
 }

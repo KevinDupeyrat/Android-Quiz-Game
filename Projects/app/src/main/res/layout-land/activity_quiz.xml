@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer"
-    android:background="@drawable/wallpaper2"
+    android:background="@drawable/wallpaper"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -35,14 +35,37 @@
         android:src="@drawable/monavatar"
         android:layout_below="@+id/progressBar" />
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/img2"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_alignParentEnd="true"
-        android:src="@mipmap/ic_launcher_round"
-        android:layout_below="@+id/progressBar"
-        android:layout_alignParentRight="true" />
+        <RelativeLayout
+            android:id="@+id/relativeIm2"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_alignParentEnd="true"
+            android:src="@color/colorCircle"
+            android:layout_below="@+id/progressBar"
+            android:layout_alignParentRight="true">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/img2"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_alignParentEnd="true"
+                android:src="@color/colorCircle"
+                android:layout_alignParentRight="true" />
+
+            <TextView
+                android:id="@+id/initialQuiz"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="A"
+                android:textSize="20dp" />
+
+        </RelativeLayout>
+
+
+
+
 
     <!-- 2 textView nom -->
 
@@ -61,7 +84,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="10dp"
-        android:layout_toLeftOf="@id/img2"
+        android:layout_toLeftOf="@id/relativeIm2"
         android:layout_below="@id/progressBar"
         android:text="@string/nom1" />
 
@@ -84,7 +107,7 @@
         android:layout_marginRight="10dp"
         android:text="@string/score2"
         android:layout_below="@id/textNom1"
-        android:layout_toLeftOf="@id/img2"/>
+        android:layout_toLeftOf="@id/relativeIm2"/>
 
     <!-- 1 textView timer -->
 
