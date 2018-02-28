@@ -1,4 +1,4 @@
-package iut.paci.classroomcomunnity.activity;
+package iut.paci.classroomcomunnity.tools;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;

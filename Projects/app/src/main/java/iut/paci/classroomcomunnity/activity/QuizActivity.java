@@ -3,12 +3,12 @@ package iut.paci.classroomcomunnity.activity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,10 +23,11 @@ import org.json.JSONException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 import iut.paci.classroomcomunnity.R;
 import iut.paci.classroomcomunnity.bean.Question;
+import iut.paci.classroomcomunnity.tools.ErrorTools;
+import iut.paci.classroomcomunnity.tools.JsonTools;
 
 public class QuizActivity extends AppCompatActivity {
 
@@ -48,7 +49,6 @@ public class QuizActivity extends AppCompatActivity {
     private boolean timeOut;
     private int score1 = 0;
     private int score2 = 0;
-    private List<Question> questionList = new ArrayList<>();
     private Question randomQuestion;
     private String json;
 
@@ -71,15 +71,9 @@ public class QuizActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
 
-        try {
-            this.initQuestion();
-            this.initButton();
-            this.initProgressBar();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-
+        this.initQuestion();
+        this.initButton();
+        this.initProgressBar();
 
         // ici on vérifie que des données n'ont pas
         // étaient sauvegardé par onStop()
@@ -132,10 +126,8 @@ public class QuizActivity extends AppCompatActivity {
 
         // On met à jout le nom, la couleur du nom et l'avatar
         // en fonction de la séléction précédante
-        this.nomAdvers.setText(getIntent().getExtras().getString("nom"));
+        this.nomAdvers.setText(getIntent().getExtras().getString("prenom") + " " + getIntent().getExtras().getString("nom"));
         this.avatarRAdvers.setText(String.valueOf(getIntent().getExtras().getString("nom").charAt(0)));
-        this.nomAdvers.setTextColor(ContextCompat.getColor(getApplicationContext(), getIntent().getExtras().getInt("color")));
-        this.textScore2.setTextColor(ContextCompat.getColor(getApplicationContext(), getIntent().getExtras().getInt("color")));
 
         // Bar de progression
         this.progressBar = (ProgressBar) findViewById(R.id.progressBar);
@@ -225,7 +217,7 @@ public class QuizActivity extends AppCompatActivity {
 
                             Log.i("Dans le Runnable", ""+progressBar);
                             if(progressStatus == 10) {
-                                Log.i("Dans le Runnable", "JE SUIS DANS LE IF");
+
                                 time.setText("TIME OUT");
                                 time.setTextColor(Color.RED);
                                 winButton();
@@ -254,52 +246,7 @@ public class QuizActivity extends AppCompatActivity {
      * et des reponses
      * @throws JSONException
      */
-    private void initQuestion() throws JSONException {
-
-        this.generQuestion();
-       // this.chooseQuestion();
-
-    }
-
-
-    /**
-     * Méthode qui ve permettre de choisir au hasard une question
-     */
-   /* private void chooseQuestion() {
-
-        Random random = new Random();
-        int randomInt = showRandomInteger(0,this.questionList.size()-1, random);
-        this.randomQuestion = questionList.get(randomInt);
-
-    } */
-
-
-    /**
-     * Méthode qui renvoie un chiffre au hasard
-     * @param aStart
-     * @param aEnd
-     * @param aRandom
-     * @return
-     */
-    private int showRandomInteger(int aStart, int aEnd, Random aRandom){
-
-        //get the range, casting to long to avoid overflow problems
-        long range = (long)aEnd - (long)aStart + 1;
-        // compute a fraction of the range, 0 <= frac < range
-        long fraction = (long)(range * aRandom.nextDouble());
-        int randomNumber =  (int)(fraction + aStart);
-
-        return randomNumber;
-    }
-
-
-    /**
-     * Génération de la question aléatoire dans le fichier JSON
-     * @throws JSONException
-     */
-    public void generQuestion()  {
-
-
+    private void initQuestion() {
 
 
         Ion.with(getApplicationContext()) //998889235
@@ -311,41 +258,27 @@ public class QuizActivity extends AppCompatActivity {
                     public void onCompleted(Exception e, Response<String> response) {
 
 
-
+                        // Si la réponse est null
                         if(response == null){
-
-                            Log.e("Chargement des amis","Pas de reponse du serveur");
-
+                            Toast.makeText(getApplicationContext(), "Erreur: Le serveur ne repond pas !", Toast.LENGTH_SHORT).show();
 
                         } else {
 
-                            Log.i("Resultat", response.getResult());
-
-                            switch (response.getHeaders().code()) {
-                                case 404:
-                                    Toast.makeText(getApplicationContext(), "Erreur 404 page not found !", Toast.LENGTH_SHORT).show();
-                                    break;
-                                case 403:
-                                    Toast.makeText(getApplicationContext(), "Erreur 404 page not found !", Toast.LENGTH_SHORT).show();
-                                    break;
-                                default:
-                                    break;
-                            }
-
-
-                            if(response.getResult().equals("{\"error\" : \"Wrong key !!!\"}")) {
-
-                                Toast.makeText(getApplicationContext(), "ERREUR Mauvaise cles !!", Toast.LENGTH_SHORT).show();
-
-
-
-                            } else {
+                            // On verrifi si la requête nous a renvoyer une erreur.
+                            // Si elle renvoie False c'est qu'il n'y as pas d'erreur
+                            // et on peut passer à la suite
+                            //TODO: ATTENTION CODE QUI RISQUE FORTEMENT DE PLANTER
+                            if(ErrorTools.errorManager(response, getApplicationContext(), (FragmentActivity) getIntent().getExtras().getSerializable("fragmentActivity"))){
 
                                 json = response.getResult();
+                            } else {
 
+                                // Si nous avons une erreur, on ferme l'activité
+                                // pour retourner sur la précédante avec 'normalement'
+                                // le Fragment de Scan ouvert
+                                callback();
                             }
                         }
-
                     }
                 });
 
@@ -353,8 +286,16 @@ public class QuizActivity extends AppCompatActivity {
         Log.i("Question", json);
         // On ajoute à la liste la question et la Map de reponse
         this.randomQuestion = JsonTools.getQuestion(json);
+
     }
 
+    /**
+     * Méthode qui ferme l'activité
+     */
+    private void callback() {
+
+        this.finish();
+    }
 
     /**
      * Méthode de vérification de l'événement
@@ -432,20 +373,18 @@ public class QuizActivity extends AppCompatActivity {
      */
     private void reinitialise() {
 
-        try {
-            // On repet la bar de progression à 0
-            progressBar.setProgress(0);
-            // On remet la couleur d'origine au compteur
-            this.time.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorAccent));
-            // On réinitialise la question
-            this.initQuestion();
-            // On réinitialise les données
-            this.initData();
-            // On relance le Thread
-            this.thread.start();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+
+        // On repet la bar de progression à 0
+        progressBar.setProgress(0);
+        // On remet la couleur d'origine au compteur
+        this.time.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorAccent));
+        // On réinitialise la question
+        this.initQuestion();
+        // On réinitialise les données
+        this.initData();
+        // On relance le Thread
+        this.thread.start();
+
     }
 
     /**

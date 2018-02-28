@@ -1,10 +1,12 @@
 package iut.paci.classroomcomunnity.frame;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,14 +18,16 @@ import android.widget.Toast;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.koushikdutta.ion.Response;
+
+import java.io.Serializable;
 import java.util.List;
 
 import iut.paci.classroomcomunnity.R;
-import iut.paci.classroomcomunnity.activity.JsonTools;
+import iut.paci.classroomcomunnity.tools.ErrorTools;
+import iut.paci.classroomcomunnity.tools.JsonTools;
 import iut.paci.classroomcomunnity.activity.MainActivity;
 import iut.paci.classroomcomunnity.activity.QuizActivity;
 import iut.paci.classroomcomunnity.adapter.FriendAdapter;
-import iut.paci.classroomcomunnity.frame.ScanFragment;
 import iut.paci.classroomcomunnity.bean.Amis;
 
 /**
@@ -69,7 +73,7 @@ public class FriendFragment extends Fragment {
 
         // Initialisation de la bar de progression
         this.progressDialog = new ProgressDialog(getContext());
-        this.progressDialog.setMessage("Merci de patienter, vos amis arrivent . . .");
+        this.progressDialog.setMessage(getString(R.string.wait_friend));
         this.progressDialog.setIndeterminate(true);
         this.progressDialog.setCancelable(false);
         this.progressDialog.show();
@@ -99,7 +103,7 @@ public class FriendFragment extends Fragment {
                             // On verrifi si la requête nous a renvoyer une erreur.
                             // Si elle renvoie False c'est qu'il n'y as pas d'erreur
                             // et on peut passer à la suite
-                            if(errorManager(response)){
+                            if(ErrorTools.errorManager(response, getContext(), getActivity())){
                                 jSonFriend = response.getResult();
                                 initListView();
                             }
@@ -109,39 +113,6 @@ public class FriendFragment extends Fragment {
                 });
 
         Log.i("Resultat en String", this.jSonFriend);
-    }
-
-    /**
-     * Méthode de gestion des erreurs
-     * avec le server
-     */
-    private boolean errorManager(Response<String> response) {
-
-        Log.i("Resultat", response.getResult());
-
-        // Gestion des différents code d'erreur en
-        // retour de la requête
-        switch (response.getHeaders().code()) {
-            case 404:
-                Toast.makeText(getContext(), "Erreur 404 page not found !", Toast.LENGTH_SHORT).show();
-                return false;
-            case 403:
-                Toast.makeText(getContext(), "Erreur 404 page not found !", Toast.LENGTH_SHORT).show();
-                return false;
-        }
-
-        // Si la clés n'est pas bonne
-        if(response.getResult().equals("{\"error\" : \"Wrong key !!!\"}")) {
-
-            // On insert le fragment qui va remplacer celui de base
-            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.contentFrame, new ScanFragment()).commit();
-
-            return false;
-        }
-
-        return true;
-
     }
 
     /**
@@ -196,22 +167,21 @@ public class FriendFragment extends Fragment {
         // nous avons besoin pour la suite
         String nom = ami.getNom();
         String prenom = ami.getPrenom();
-        int isPresent  = ami.isPresent();
-        int lastScore = ami.getLastScore();
-
+        int id  = ami.getId();
 
         // Création d'un Intent (activité)
         Intent intent = new Intent(getContext(), QuizActivity.class);
         // Création d'une boite
         Bundle bundle = new Bundle();
         // Ajout de l'identifiant dans notre boite
+        bundle.putInt("id",id);
         bundle.putString("nom",nom);
         bundle.putString("prenom",prenom);
-        bundle.putInt("isPresent",isPresent);
-        bundle.putInt("lastScore",lastScore);
-
+        //TODO: ATTENTION CODE QUI RISQUE FORTEMENT DE PLANTER
+        bundle.putSerializable("fragmentActivity", (Serializable) getActivity());
         // Ajout de notre boite dans notre prochaine activité
         intent.putExtras(bundle);
+        //intent.putExtra("fragmentActivity",getActivity());
         // On demarre une activité
         startActivity(intent);
 

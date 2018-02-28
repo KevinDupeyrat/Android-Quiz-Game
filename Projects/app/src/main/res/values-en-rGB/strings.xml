@@ -18,4 +18,5 @@
     <string name="logout">Sign out</string>
     <string name="home">Home</string>
     <string name="scan_code">QR code Scan</string>
+    <string name="wait_friend">Please wait, your friends are coming. . .</string>
 </resources>
