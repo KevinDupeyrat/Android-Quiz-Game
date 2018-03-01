@@ -1,0 +1,43 @@
+[
+
+	{
+		"id":1,
+		"first_name":"JA1",
+		"last_name":"ja1",
+		"is_present":"1",
+		"photo_path":null,
+		"last_score":"10"
+	},
+	{
+		"id":2,
+		"first_name":"JB2",
+		"last_name":"jb2",
+		"is_present":"0",
+		"photo_path":null,
+		"last_score":"12"
+	},
+	{
+		"id":1,
+		"first_name":"JC3",
+		"last_name":"jc3",
+		"is_present":"1",
+		"photo_path":null,
+		"last_score":"8"
+	},
+	{
+		"id":1,
+		"first_name":"JD4",
+		"last_name":"jd4",
+		"is_present":"1",
+		"photo_path":null,
+		"last_score":"17"
+	},
+	{
+		"id":1,
+		"first_name":"JE5",
+		"last_name":"je5",
+		"is_present":"0",
+		"photo_path":null,
+		"last_score":"10"
+	}
+]

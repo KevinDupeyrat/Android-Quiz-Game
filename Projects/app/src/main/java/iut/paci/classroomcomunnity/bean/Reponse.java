@@ -1,5 +1,7 @@
 package iut.paci.classroomcomunnity.bean;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by dupeyrat on 28/02/18.
  *
@@ -10,14 +12,26 @@ package iut.paci.classroomcomunnity.bean;
 
 public class Reponse {
 
-    // TODO: @SerializedName("") avec le bon nom
+    @SerializedName("id")
+    private int id;
+    @SerializedName("text")
     private String reponse;
-    // TODO: @SerializedName("") avec le bon nom
+    @SerializedName("is_right")
     private int bonneReponse;
 
-    public Reponse(String reponse, int bonneReponse) {
+    public Reponse(int id, String reponse, int bonneReponse) {
+
+        this.id = id;
         this.reponse = reponse;
         this.bonneReponse = bonneReponse;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getReponse() {

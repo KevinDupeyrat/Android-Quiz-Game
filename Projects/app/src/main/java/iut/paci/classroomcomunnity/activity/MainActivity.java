@@ -84,6 +84,18 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Méthode de gestion du boutton
+     * de backPress
+     * Ici nous allons seulement ouvrir
+     * le Drawer pour ne pas revenir sur
+     * la page de connexion
+     */
+    @Override
+    public void onBackPressed() {
+
+        this.drawer.openDrawer(GravityCompat.START);
+    }
 
     /**
      * Méthode qui permet de faire une action

@@ -81,6 +81,7 @@
             android:layout_marginRight="10dp"
             android:layout_toLeftOf="@id/relativeIm2"
             android:layout_below="@id/progressBar"
+            android:textColor="@color/colorAccent"
             android:text="@string/nom1" />
 
         <!-- 2 textView score -->
@@ -101,6 +102,7 @@
             android:layout_height="wrap_content"
             android:text="@string/score2"
             android:layout_marginRight="10dp"
+            android:textColor="@color/colorAccent"
             android:layout_below="@id/textNom1"
             android:layout_toLeftOf="@id/relativeIm2"/>
 

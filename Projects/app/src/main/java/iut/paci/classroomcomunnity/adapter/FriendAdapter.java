@@ -87,7 +87,9 @@ public class FriendAdapter extends ArrayAdapter<Amis> {
 
 
             if(ami.isPresent() == 0) {
-                connected.setBackgroundColor(Color.RED);
+                connected.setImageResource(R.drawable.circle_absent);
+                nameFriend.setTextColor(Color.GRAY);
+                lastScoreFriend.setTextColor(Color.GRAY);
             }
 
 

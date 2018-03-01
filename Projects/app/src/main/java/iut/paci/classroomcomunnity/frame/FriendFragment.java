@@ -19,6 +19,8 @@ import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.koushikdutta.ion.Response;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.List;
 
@@ -54,6 +56,7 @@ public class FriendFragment extends Fragment {
         // contient ce Fragement
         rootView = inflater.inflate(R.layout.fragment_friend, container, false);
 
+        // this.getLocalFriend();
         this.getRemoteFriend();
 
         return rootView;
@@ -116,6 +119,39 @@ public class FriendFragment extends Fragment {
     }
 
     /**
+     * Méthode de génération d'amis avec un
+     * fichier json local
+     *
+     * @test
+     */
+    private void getLocalFriend() {
+
+        String json = null;
+
+        try {
+
+            // On ouvre le Flux vers le fichier
+            InputStream is = getResources().openRawResource(R.raw.friends);
+            int size = 0;
+            size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            // Convertion en String de la lecture
+            json = new String(buffer, "UTF-8");
+            // On retourne le resultat
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        jSonFriend = json;
+        initListView();
+
+    }
+
+    /**
      * Méthode de création de la ListView
      */
     private void initListView() {
@@ -126,6 +162,33 @@ public class FriendFragment extends Fragment {
         // On utilise la class JsonTools pour récupérer la
         // liste d'amis à partir de la String Json
         List<Amis> amisList = JsonTools.getAmis(this.jSonFriend);
+
+        //TODO: Test a supprimer après validation
+        // ##################################################################
+       /*
+        String json = null;
+
+        try {
+
+            // On ouvre le Flux vers le fichier
+            InputStream is = getResources().openRawResource(R.raw.friends);
+            int size = 0;
+            size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            // Convertion en String de la lecture
+            json = new String(buffer, "UTF-8");
+            // On retourne le resultat
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        List<Amis> amisList = JsonTools.getAmis(json);
+       */
+        // ##################################################################
 
         // On crée l'adapter pour la listeView
         FriendAdapter adapter = new FriendAdapter(rootView.getContext(), R.layout.item_player, amisList);
@@ -177,8 +240,6 @@ public class FriendFragment extends Fragment {
         bundle.putInt("id",id);
         bundle.putString("nom",nom);
         bundle.putString("prenom",prenom);
-        //TODO: ATTENTION CODE QUI RISQUE FORTEMENT DE PLANTER
-        bundle.putSerializable("fragmentActivity", (Serializable) getActivity());
         // Ajout de notre boite dans notre prochaine activité
         intent.putExtras(bundle);
         //intent.putExtra("fragmentActivity",getActivity());

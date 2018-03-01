@@ -20,12 +20,16 @@ import com.koushikdutta.ion.Response;
 
 import org.json.JSONException;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import iut.paci.classroomcomunnity.R;
+import iut.paci.classroomcomunnity.bean.Amis;
 import iut.paci.classroomcomunnity.bean.Question;
+import iut.paci.classroomcomunnity.bean.Reponse;
 import iut.paci.classroomcomunnity.tools.ErrorTools;
 import iut.paci.classroomcomunnity.tools.JsonTools;
 
@@ -71,6 +75,7 @@ public class QuizActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
 
+        // this.initQuestionLocal();
         this.initQuestion();
         this.initButton();
         this.initProgressBar();
@@ -102,6 +107,8 @@ public class QuizActivity extends AppCompatActivity {
         icicle.putInt("progressStatus", progressStatus);
         icicle.putInt("score1", score1);
         icicle.putBoolean("timeOut", timeOut);
+
+        //TODO: Gérer les boutons
     }
 
     /**
@@ -156,18 +163,19 @@ public class QuizActivity extends AppCompatActivity {
             b.setEnabled(true);
         }
 
-        List<String> rep = this.randomQuestion.getReponseText();
+        // On récupère la liste de reponses
+        List<Reponse> reponses = this.randomQuestion.getReponses();
 
-        Collections.shuffle(rep);
+        Collections.shuffle(reponses);
 
         int i = 0;
         // Ajout du listeneur à tous les boutons
         // et du text sur les questions
         for(final Button b : this.getListButton()) {
-            b.setText(rep.get(i).toString());
+            b.setText(reponses.get(i).getReponse());
             // On enregistre la bonne reponse pour la suite
-            if (this.randomQuestion.getReponses().get(b.getText()))
-                this.setGoodAnswer(rep.get(i).toString());
+            if (reponses.get(i).isBonneReponse() == 1)
+                this.setGoodAnswer(reponses.get(i).getReponse());
 
             i++;
             b.setOnClickListener(new View.OnClickListener() {
@@ -267,8 +275,7 @@ public class QuizActivity extends AppCompatActivity {
                             // On verrifi si la requête nous a renvoyer une erreur.
                             // Si elle renvoie False c'est qu'il n'y as pas d'erreur
                             // et on peut passer à la suite
-                            //TODO: ATTENTION CODE QUI RISQUE FORTEMENT DE PLANTER
-                            if(ErrorTools.errorManager(response, getApplicationContext(), (FragmentActivity) getIntent().getExtras().getSerializable("fragmentActivity"))){
+                            if(ErrorTools.errorManager(response, getApplicationContext(), null)){
 
                                 json = response.getResult();
                             } else {
@@ -287,6 +294,39 @@ public class QuizActivity extends AppCompatActivity {
         // On ajoute à la liste la question et la Map de reponse
         this.randomQuestion = JsonTools.getQuestion(json);
 
+    }
+
+    /**
+     * Méthode d'inicialisation de
+     * la question pour tester avec un fichier
+     * json local
+     *
+     * @Test
+     */
+    private void initQuestionLocal() {
+
+
+        String json = null;
+
+        try {
+
+            // On ouvre le Flux vers le fichier
+            InputStream is = getResources().openRawResource(R.raw.question);
+            int size = 0;
+            size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            // Convertion en String de la lecture
+            json = new String(buffer, "UTF-8");
+            // On retourne le resultat
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        this.randomQuestion = JsonTools.getQuestion(json);
     }
 
     /**

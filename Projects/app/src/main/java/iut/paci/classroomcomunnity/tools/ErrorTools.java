@@ -1,5 +1,6 @@
 package iut.paci.classroomcomunnity.tools;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -39,14 +40,20 @@ public class ErrorTools {
         // Si la clés n'est pas bonne
         if(response.getResult().equals("{\"error\" : \"Wrong key !!!\"}")) {
 
-            // On insert le fragment qui va remplacer celui de base
-            FragmentManager fragmentManager = fragmentActivity.getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.contentFrame, new ScanFragment()).commit();
+            if (fragmentActivity != null) {
+                // On insert le fragment qui va remplacer celui de base
+                FragmentManager fragmentManager = fragmentActivity.getSupportFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.contentFrame, new ScanFragment()).commit();
+
+            } else {
+
+                // On ferme l'activité s'il y a une erreur
+                ((Activity) context).finish();
+            }
 
             return false;
         }
 
         return true;
-
     }
 }

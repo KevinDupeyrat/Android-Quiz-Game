@@ -1,0 +1,27 @@
+{
+	"id":1,
+	"text":"azerty uiopsd zdf kzopkfaze a z r zefopk ?",
+	"duration":null,
+	"answer":[
+		{
+			"id":1,
+			"text":"reponse1.1",
+			"is_right":"1"
+		},
+		{
+			"id":2,
+			"text":"reponse1.2",
+			"is_right":"0"
+		},
+		{
+			"id":3,
+			"text":"reponse1.3",
+			"is_right":"0"
+		},
+		{
+			"id":4,
+			"text":"reponse1.4",
+			"is_right":"0"
+		}
+	]
+}

@@ -20,4 +20,6 @@
     <color name="womanColor">#FF00FF</color>
     <color name="colorCircle">#DF7401</color>
 
+    <color name="colorAbsent">#DF0101</color>
+
 </resources>

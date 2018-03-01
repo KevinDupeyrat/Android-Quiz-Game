@@ -19,18 +19,31 @@ public class Question {
 
     // TODO: @SerializedName("") avec le bon nom
 
-    @SerializedName("question")
+    @SerializedName("id")
+    private int id;
+    @SerializedName("text")
     private String question;
-    @SerializedName("answers")
-    private HashMap<Reponse, Boolean> reponse;
+    @SerializedName("answer")
+    private List<Reponse> reponse;
+    @SerializedName("duration")
+    private int duration;
 
-    public Question(String q, HashMap<Reponse, Boolean> r) {
+    public Question(int id, String q, List<Reponse> r, int d) {
 
+        this.id = id;
         this.question = q;
         this.reponse = r;
+        this.duration = d;
 
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getQuestion() {
         return question;
@@ -40,23 +53,21 @@ public class Question {
         this.question = question;
     }
 
-    public Map<Reponse, Boolean> getReponses() {
-        return reponse;
+    public List<Reponse> getReponses() {
+
+        return this.reponse;
     }
 
-    public List<String> getReponseText() {
-
-        List<String> list = new ArrayList<>();
-
-        for (HashMap.Entry<Reponse, Boolean> entry : reponse.entrySet()) {
-            list.add(entry.getKey().getReponse());
-        }
-
-        return list;
-    }
-
-    public void setReponse(HashMap<Reponse, Boolean> reponse) {
+    public void setReponse(List<Reponse> reponse) {
         this.reponse = reponse;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
     }
 }
 
