@@ -7,15 +7,42 @@
     android:orientation="vertical">
 
 
-    <de.hdodenhof.circleimageview.CircleImageView
+    <RelativeLayout
         android:id="@+id/avatar"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:src="@drawable/monavatar"
         android:layout_centerInParent="true"
-        android:background="@drawable/wallpaper"/>
+        android:layout_width="200dp"
+        android:layout_height="200dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:id="@+id/myAvatar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@color/colorCircle"/>
+
+        <TextView
+            android:id="@+id/prenomInitial"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="100dp"
+            android:layout_centerVertical="true"
+            android:text="A"
+            android:textSize="100dp" />
+
+        <TextView
+            android:id="@+id/nomInitial"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_centerVertical="true"
+            android:text="A"
+            android:textSize="100dp" />
+
+    </RelativeLayout>
 
     <TextView
+        android:id="@+id/mainAvatarName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="220dp"

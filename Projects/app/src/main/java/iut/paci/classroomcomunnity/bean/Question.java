@@ -23,10 +23,10 @@ public class Question {
     private int id;
     @SerializedName("text")
     private String question;
-    @SerializedName("answer")
-    private List<Reponse> reponse;
     @SerializedName("duration")
     private int duration;
+    @SerializedName("answers")
+    private List<Reponse> reponse;
 
     public Question(int id, String q, List<Reponse> r, int d) {
 

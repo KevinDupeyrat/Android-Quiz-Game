@@ -14,8 +14,19 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
+
+import com.google.gson.JsonObject;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import iut.paci.classroomcomunnity.R;
 import iut.paci.classroomcomunnity.frame.AboutFragment;
@@ -23,6 +34,7 @@ import iut.paci.classroomcomunnity.frame.FriendFragment;
 import iut.paci.classroomcomunnity.frame.HomeFragment;
 import iut.paci.classroomcomunnity.frame.ScanFragment;
 import iut.paci.classroomcomunnity.frame.SettingFragment;
+import iut.paci.classroomcomunnity.tools.PropertiesTools;
 
 /**
  * Activité pricincipale qui
@@ -31,9 +43,25 @@ import iut.paci.classroomcomunnity.frame.SettingFragment;
 public class MainActivity extends AppCompatActivity {
 
     private ActionBarDrawerToggle toggle;
-    private DrawerLayout drawer;
-    private NavigationView nav;
+    private static DrawerLayout drawer;
+    private static NavigationView nav;
+
     private static String serverCode;
+    private static int my_id;
+
+
+    public static int getMy_id() {
+        return my_id;
+    }
+
+
+    /**
+     *
+     * @return
+     */
+    public static NavigationView getNavigatView() {
+        return nav;
+    }
 
 
     /**
@@ -54,6 +82,13 @@ public class MainActivity extends AppCompatActivity {
         return serverCode;
     }
 
+    /**
+     * Getter du drawer
+     *
+     * @return
+     */
+    public static DrawerLayout getDrawer() { return drawer; }
+
 
     /**
      * Méthode appelé à la création de l'activité
@@ -64,6 +99,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        my_id = getIntent().getExtras().getInt("my_id");
 
         // On recupère le Drawer
         drawer = (DrawerLayout) findViewById(R.id.drawer);
@@ -84,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
     /**
      * Méthode de gestion du boutton
      * de backPress
@@ -94,8 +132,26 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
-        this.drawer.openDrawer(GravityCompat.START);
+        drawer.openDrawer(GravityCompat.START);
     }
+
+
+    /**
+     * Méthode qui permet de savoir si le bouton
+     * a était activé
+     *
+     * @param item
+     * @return
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        super.onOptionsItemSelected(item);
+        if(toggle.onOptionsItemSelected(item))
+            return true;
+
+        return false;
+    }
+
 
     /**
      * Méthode qui permet de faire une action
@@ -123,11 +179,25 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+    /**
+     * A la fermeture de l'application
+     * nous demandons à nous déloger du server
+     */
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        this.logOutServer();
+    }
+
+    /**
+     * Méthode de création du Drawer
+     */
     private void creatDrawer() {
 
         // On recupère le Navigateur View
         nav = (NavigationView) findViewById(R.id.nav_view);
-        nav.getMenu().performIdentifierAction(R.id.nav_friend, 0);
         nav.bringToFront();
 
         // Setup drawer view
@@ -142,12 +212,18 @@ public class MainActivity extends AppCompatActivity {
         // Synchronisation du toggle avec le Drower
         toggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        nav.getMenu().performIdentifierAction(R.id.nav_home, 0);
+        nav.getMenu().performIdentifierAction(R.id.nav_photo, 0);
+
+
+        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+
     }
+
 
     /**
      * Méthode pour initialiser le
      * contenu du Drawer
+     *
      * @param navigationView
      */
     private void setupDrawerContent(NavigationView navigationView) {
@@ -166,6 +242,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Méthode pour la gestion de la selection dans le menu
+     *
      * @param menuItem
      */
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
@@ -194,7 +271,7 @@ public class MainActivity extends AppCompatActivity {
                 fragmentClass = ScanFragment.class;
                 break;
             case R.id.nav_logout:
-                this.finish();
+                this.logOutServer();
                 return;
             default:
                 fragmentClass = null;
@@ -221,19 +298,41 @@ public class MainActivity extends AppCompatActivity {
 
 
     /**
-     * Méthode qui permet de savoir si le bouton
-     * a était activé
-     *
-     * @param item
-     * @return
+     * Méthode qui permet de ce déloger du server
      */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        super.onOptionsItemSelected(item);
-        if(toggle.onOptionsItemSelected(item))
-            return true;
+    private void logOutServer(){
 
-        return false;
+
+        Map<String, String> prop = new HashMap<>();
+
+        try {
+            prop = PropertiesTools.getProperties(getApplicationContext(), "logout");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        String url = prop.get("protocole")
+                + prop.get("ip_adress")
+                + prop.get("path")
+                +"?key=" + MainActivity.getServerCode() +"&id="+ my_id;
+
+        Log.i("URL", url);
+
+
+
+
+        // On envoie la demande de connexion
+        // au serveur
+        Ion.with(getApplicationContext())
+                .load( url )
+                .asJsonObject()
+                .setCallback(new FutureCallback<JsonObject>() {
+                    @Override
+                    public void onCompleted(Exception e, JsonObject result) {
+
+                        finish();
+                    }
+                });
     }
 
 }

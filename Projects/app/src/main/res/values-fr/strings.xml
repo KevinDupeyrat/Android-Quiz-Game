@@ -19,4 +19,5 @@
     <string name="home">Accueil</string>
     <string name="scan_code">Scanner un QR code</string>
     <string name="wait_friend">Merci de patienter, vos amis arrivent . . .</string>
+    <string name="wait_request">Merci de patienter, votre requête a était envoyée. . .</string>
 </resources>

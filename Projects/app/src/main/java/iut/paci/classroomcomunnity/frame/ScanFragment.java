@@ -3,6 +3,7 @@ package iut.paci.classroomcomunnity.frame;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,11 +14,16 @@ import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 import iut.paci.classroomcomunnity.R;
 import iut.paci.classroomcomunnity.activity.MainActivity;
+import iut.paci.classroomcomunnity.tools.PropertiesTools;
 import me.dm7.barcodescanner.zbar.BarcodeFormat;
 import me.dm7.barcodescanner.zbar.Result;
 import me.dm7.barcodescanner.zbar.ZBarScannerView;
@@ -26,7 +32,8 @@ import me.dm7.barcodescanner.zbar.ZBarScannerView;
  * Fragment qui gère le scan du code QR
  */
 public class ScanFragment extends Fragment implements ZBarScannerView.ResultHandler{
-    ZBarScannerView scannerView;
+
+    private ZBarScannerView scannerView;
 
     public ScanFragment() {}
 
@@ -94,23 +101,35 @@ public class ScanFragment extends Fragment implements ZBarScannerView.ResultHand
     @Override
     public void handleResult(Result result) {
 
+
+        Map<String, String> prop = new HashMap<>();
+
         // On récupère le resultat sous forme de String
         String code = result.getContents();
         // On l'affecte à l'activité principale
         MainActivity.setServerCode(code);
-
+        prop.put("code_server", code);
         Log.i("Attente", "QRcode : " + code);
 
-        // http://172.19.36.63/classroom_server/checkAttending.php??key="+code+"&id=11"
-        // http://172.19.36.63/classroom_server/getFriends.php?key=paci.iut.999235
-        // http://172.19.36.63/classroom_server/getQuestions.php?key=paci.iut.999235
+        try {
+            prop = PropertiesTools.getProperties(getContext(), "attending");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        // URL pour ce connecter au serveur
-        String url = "http://192.168.137.1/classroom_server/checkAttending.php?key="+code+"&id=11";
+        String url = prop.get("protocole")
+                + prop.get("ip_adress")
+                + prop.get("path")
+                +"?key=" + code +"&id="+ MainActivity.getMy_id();
+
+        Log.i("URL", url);
+
+
+
 
         // On envoie la demande de connexion
         // au serveur
-        Ion.with(getActivity())
+        Ion.with(getContext())
                 .load( url )
                 .asJsonObject()
                 .setCallback(new FutureCallback<JsonObject>() {
@@ -118,10 +137,12 @@ public class ScanFragment extends Fragment implements ZBarScannerView.ResultHand
                     public void onCompleted(Exception e, JsonObject result) {  }
                 });
 
+        MainActivity.getDrawer().setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
 
         // On redirige en suite vers la liste d'amis
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.contentFrame, new FriendFragment()).commit();
 
     }
+
 }

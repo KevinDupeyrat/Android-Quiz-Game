@@ -1,10 +1,11 @@
 package iut.paci.classroomcomunnity.activity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -24,14 +25,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 import iut.paci.classroomcomunnity.R;
-import iut.paci.classroomcomunnity.bean.Amis;
 import iut.paci.classroomcomunnity.bean.Question;
 import iut.paci.classroomcomunnity.bean.Reponse;
-import iut.paci.classroomcomunnity.tools.ErrorTools;
+import iut.paci.classroomcomunnity.tools.ErrorServerTools;
 import iut.paci.classroomcomunnity.tools.JsonTools;
+import iut.paci.classroomcomunnity.tools.PropertiesTools;
 
 public class QuizActivity extends AppCompatActivity {
 
@@ -56,6 +60,10 @@ public class QuizActivity extends AppCompatActivity {
     private Question randomQuestion;
     private String json;
 
+    private int idAdv;
+    private String nomAdv;
+    private String prenomAdv;
+
 
     private List<Button> getListButton() {
         return LISTBUTTON;
@@ -77,8 +85,8 @@ public class QuizActivity extends AppCompatActivity {
 
         // this.initQuestionLocal();
         this.initQuestion();
-        this.initButton();
-        this.initProgressBar();
+//        this.initButton();
+//        this.initProgressBar();
 
         // ici on vérifie que des données n'ont pas
         // étaient sauvegardé par onStop()
@@ -92,6 +100,7 @@ public class QuizActivity extends AppCompatActivity {
         }
 
     }
+
 
     /**
      * Méthode qui permet de faire une sauvegarde de l'état
@@ -111,12 +120,32 @@ public class QuizActivity extends AppCompatActivity {
         //TODO: Gérer les boutons
     }
 
+
+    /**
+     * Méthode de gestion du boutton
+     * de backPress
+     * Ici nous allons seulement ouvrir
+     * le Drawer pour ne pas revenir sur
+     * la page de connexion
+     */
+    @Override
+    public void onBackPressed() {
+        timeOut = true;
+        this.finish();
+    }
+
+
     /**
      * Initialisation des boutons
      * de l'activité
      */
     private void initButton() {
 
+        this.nomAdv = getIntent().getExtras().getString("prenom");
+        this.prenomAdv = getIntent().getExtras().getString("nom");
+        this.score1 = getIntent().getExtras().getInt("score1");
+        this.score2 = getIntent().getExtras().getInt("score2");
+        this.idAdv = getIntent().getExtras().getInt("id");
 
         // Création de la liste de bouton
         this.getListButton().add((Button) findViewById(R.id.b1));
@@ -133,13 +162,16 @@ public class QuizActivity extends AppCompatActivity {
 
         // On met à jout le nom, la couleur du nom et l'avatar
         // en fonction de la séléction précédante
-        this.nomAdvers.setText(getIntent().getExtras().getString("prenom") + " " + getIntent().getExtras().getString("nom"));
+        this.nomAdvers.setText(prenomAdv + " " + nomAdv);
         this.avatarRAdvers.setText(String.valueOf(getIntent().getExtras().getString("nom").charAt(0)));
 
         // Bar de progression
         this.progressBar = (ProgressBar) findViewById(R.id.progressBar);
         // Compteur de temps
         this.time = (TextView) findViewById(R.id.textTimer);
+
+        this.textScore1.setText(String.valueOf(this.score1));
+        this.textScore2.setText(String.valueOf(this.score2));
 
         this.initData();
 
@@ -168,25 +200,24 @@ public class QuizActivity extends AppCompatActivity {
 
         Collections.shuffle(reponses);
 
-        int i = 0;
+
         // Ajout du listeneur à tous les boutons
         // et du text sur les questions
-        for(final Button b : this.getListButton()) {
-            b.setText(reponses.get(i).getReponse());
+        for(int i = 0; i <  reponses.size(); i++) {
+            final Button boutonSelect = this.getListButton().get(i);
+            boutonSelect.setText(reponses.get(i).getReponse());
             // On enregistre la bonne reponse pour la suite
             if (reponses.get(i).isBonneReponse() == 1)
                 this.setGoodAnswer(reponses.get(i).getReponse());
 
-            i++;
-            b.setOnClickListener(new View.OnClickListener() {
+            boutonSelect.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     timeOut = true;
-                    checkButton(b);
+                    checkButton(boutonSelect);
                     (new Handler()).post(new Runnable() {
                         @Override
                         public void run() {
-                            doWait();
                             reinitialise();
                         }
                     });
@@ -197,6 +228,7 @@ public class QuizActivity extends AppCompatActivity {
 
         this.question.setText(this.randomQuestion.getQuestion());
     }
+
 
     /**
      * Initialisation de la bar de
@@ -229,7 +261,6 @@ public class QuizActivity extends AppCompatActivity {
                                 time.setText("TIME OUT");
                                 time.setTextColor(Color.RED);
                                 winButton();
-                                doWait();
                                 reinitialise();
                             }
                         }
@@ -256,9 +287,25 @@ public class QuizActivity extends AppCompatActivity {
      */
     private void initQuestion() {
 
+        Map<String, String> prop = new HashMap<>();
+
+        try {
+            prop = PropertiesTools.getProperties(getApplicationContext(), "question");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        String url = prop.get("protocole")
+                + prop.get("ip_adress")
+                + prop.get("path")
+                +"?key="+ MainActivity.getServerCode() +
+                "&id=1";
+
+        Log.i("URL QUESTION", url);
+
 
         Ion.with(getApplicationContext()) //998889235
-                .load("http://192.168.137.1/classroom_server/getQuestions.php?key=paci.iut.1235")
+                .load(url)
                 .asString()
                 .withResponse()
                 .setCallback(new FutureCallback<Response<String>>() {
@@ -275,9 +322,14 @@ public class QuizActivity extends AppCompatActivity {
                             // On verrifi si la requête nous a renvoyer une erreur.
                             // Si elle renvoie False c'est qu'il n'y as pas d'erreur
                             // et on peut passer à la suite
-                            if(ErrorTools.errorManager(response, getApplicationContext(), null)){
-
+                            if(ErrorServerTools.errorManager(response, getApplicationContext(), null)){
                                 json = response.getResult();
+                                Log.i("QUESTION JSON", response.getResult());
+                                randomQuestion = JsonTools.getQuestion(json);
+
+                                initButton();
+                                initProgressBar();
+                                return;
                             } else {
 
                                 // Si nous avons une erreur, on ferme l'activité
@@ -290,52 +342,23 @@ public class QuizActivity extends AppCompatActivity {
                 });
 
 
-        Log.i("Question", json);
-        // On ajoute à la liste la question et la Map de reponse
-        this.randomQuestion = JsonTools.getQuestion(json);
+       // Log.i("Question", json);
 
     }
 
-    /**
-     * Méthode d'inicialisation de
-     * la question pour tester avec un fichier
-     * json local
-     *
-     * @Test
-     */
-    private void initQuestionLocal() {
-
-
-        String json = null;
-
-        try {
-
-            // On ouvre le Flux vers le fichier
-            InputStream is = getResources().openRawResource(R.raw.question);
-            int size = 0;
-            size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-            // Convertion en String de la lecture
-            json = new String(buffer, "UTF-8");
-            // On retourne le resultat
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        this.randomQuestion = JsonTools.getQuestion(json);
-    }
 
     /**
-     * Méthode qui ferme l'activité
+     * Méthode qui ferme l'activité quand nous
+     * rencontrons un problème avec la clé
      */
     private void callback() {
 
+        Toast.makeText(getApplicationContext(), "Erreur Clé incorrecte !", Toast.LENGTH_SHORT).show();
+
+        this.doWait();
         this.finish();
     }
+
 
     /**
      * Méthode de vérification de l'événement
@@ -387,6 +410,7 @@ public class QuizActivity extends AppCompatActivity {
         }
     }
 
+
     /**
      * Affichage de la bonne reponse
      */
@@ -407,6 +431,7 @@ public class QuizActivity extends AppCompatActivity {
         }
     }
 
+
     /**
      * Méthode de réinitialisation
      * de l'activité
@@ -414,18 +439,27 @@ public class QuizActivity extends AppCompatActivity {
     private void reinitialise() {
 
 
-        // On repet la bar de progression à 0
-        progressBar.setProgress(0);
-        // On remet la couleur d'origine au compteur
-        this.time.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorAccent));
-        // On réinitialise la question
-        this.initQuestion();
-        // On réinitialise les données
-        this.initData();
-        // On relance le Thread
-        this.thread.start();
+        doWait();
+
+        Intent intent = new Intent(getApplicationContext(), QuizActivity.class);
+        // Création d'une boite
+        Bundle bundle = new Bundle();
+        // Ajout de l'identifiant dans notre boite
+        bundle.putInt("id",this.idAdv);
+        bundle.putString("nom",String.valueOf(this.nomAdv));
+        bundle.putString("prenom",String.valueOf(this.prenomAdv));
+        bundle.putInt("score1",this.score1);
+        bundle.putInt("score2",this.score2);
+        // Ajout de notre boite dans notre prochaine activité
+        intent.putExtras(bundle);
+        //intent.putExtra("fragmentActivity",getActivity());
+        // On demarre une activité
+        startActivity(intent);
+
+        this.finish();
 
     }
+
 
     /**
      * On fait une petite pause d'une seconde
@@ -438,6 +472,15 @@ public class QuizActivity extends AppCompatActivity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+    }
+
+
+    /**
+     * Méthode qui permet d'envoyer
+     * notre reponse à la question au server
+     */
+    private void sendServerResponse() {
 
     }
 }

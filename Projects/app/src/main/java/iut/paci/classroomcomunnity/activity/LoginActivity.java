@@ -9,7 +9,13 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+
 import iut.paci.classroomcomunnity.R;
+import iut.paci.classroomcomunnity.tools.PropertiesTools;
 
 
 /**
@@ -63,7 +69,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 else {
 
-                    if (!iden.equals("a") || !mdp.equals("1")){
+                    if (Integer.parseInt(iden) < 0 && Integer.parseInt(iden) > 29){
                         Toast.makeText(view.getContext(), "Identifiant ou mot de passe incorrecte !", Toast.LENGTH_SHORT).show();
                         Log.i(TAG, "Identifiant ou mot de passe incorrecte !");
                     } else {
@@ -71,9 +77,15 @@ public class LoginActivity extends AppCompatActivity {
                         identifiant.setText("");
                         pass.setText("");
 
+                        Bundle bundle = new Bundle();
+                        // Ajout de l'identifiant dans notre boite
+                        bundle.putInt("my_id",Integer.parseInt(iden));
+
                         // Création d'un Intent (activité)
                         // Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        // Ajout de notre boite dans notre prochaine activité
+                        intent.putExtras(bundle);
                         // On demarre une activité
                         startActivity(intent);
                     }
