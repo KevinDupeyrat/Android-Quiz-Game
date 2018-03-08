@@ -22,13 +22,32 @@
 
         <!-- 2 imageView -->
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/img1"
+
+        <RelativeLayout
+            android:id="@+id/relativeIm1"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:src="@drawable/monavatar"
-            android:layout_below="@+id/progressBar"
-            />
+            android:src="@color/colorCircle"
+            android:layout_below="@+id/progressBar">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/img1"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_alignParentEnd="true"
+                    android:src="@color/colorCircle"
+                    android:layout_alignParentRight="true" />
+
+                <TextView
+                    android:id="@+id/initialQuiz1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:text="A"
+                    android:textSize="20dp" />
+
+        </RelativeLayout>
 
 
 
@@ -50,7 +69,7 @@
                     android:layout_alignParentRight="true" />
 
                 <TextView
-                    android:id="@+id/initialQuiz"
+                    android:id="@+id/initialQuiz2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
@@ -69,7 +88,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:layout_toRightOf="@id/img1"
+            android:layout_toRightOf="@id/relativeIm1"
             android:layout_below="@id/progressBar"
             android:textColor="@color/colorAccent"
             android:text="@string/nom2" />
@@ -94,7 +113,7 @@
             android:layout_marginLeft="10dp"
             android:textColor="@color/colorAccent"
             android:layout_below="@id/textNom2"
-            android:layout_toRightOf="@id/img1"/>
+            android:layout_toRightOf="@id/relativeIm1"/>
 
         <TextView
             android:id="@+id/textScore2"

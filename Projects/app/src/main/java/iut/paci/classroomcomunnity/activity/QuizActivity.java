@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.GravityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -22,13 +20,11 @@ import com.koushikdutta.ion.Response;
 import org.json.JSONException;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import iut.paci.classroomcomunnity.R;
 import iut.paci.classroomcomunnity.bean.Question;
@@ -49,6 +45,8 @@ public class QuizActivity extends AppCompatActivity {
     private TextView textScore2;
     private TextView nomAdvers;
     private TextView avatarRAdvers;
+    private TextView nomMoi;
+    private TextView avatarRMoi;
 
     private Thread thread;
     private Handler handler;
@@ -61,6 +59,8 @@ public class QuizActivity extends AppCompatActivity {
     private String json;
 
     private int idAdv;
+    private String monNom;
+    private String monPrenom;
     private String nomAdv;
     private String prenomAdv;
 
@@ -141,8 +141,10 @@ public class QuizActivity extends AppCompatActivity {
      */
     private void initButton() {
 
-        this.nomAdv = getIntent().getExtras().getString("prenom");
-        this.prenomAdv = getIntent().getExtras().getString("nom");
+        this.nomAdv = getIntent().getExtras().getString("nom");
+        this.prenomAdv = getIntent().getExtras().getString("prenom");
+        this.monNom = getIntent().getExtras().getString("MonNom");
+        this.monPrenom = getIntent().getExtras().getString("MonPrenom");
         this.score1 = getIntent().getExtras().getInt("score1");
         this.score2 = getIntent().getExtras().getInt("score2");
         this.idAdv = getIntent().getExtras().getInt("id");
@@ -158,13 +160,17 @@ public class QuizActivity extends AppCompatActivity {
         this.textScore1 = (TextView) findViewById(R.id.textScore);
         this.textScore2 = (TextView) findViewById(R.id.textScore2);
         this.nomAdvers = (TextView) findViewById(R.id.textNom2);
-        this.avatarRAdvers = (TextView) findViewById(R.id.initialQuiz);
+        this.avatarRAdvers = (TextView) findViewById(R.id.initialQuiz2);
+        this.nomMoi = (TextView) findViewById(R.id.textNom1);
+        this.avatarRMoi = (TextView) findViewById(R.id.initialQuiz1);
 
         // On met à jout le nom, la couleur du nom et l'avatar
         // en fonction de la séléction précédante
         this.nomAdvers.setText(prenomAdv + " " + nomAdv);
-        this.avatarRAdvers.setText(String.valueOf(getIntent().getExtras().getString("nom").charAt(0)));
+        this.avatarRAdvers.setText(String.valueOf(nomAdv.charAt(0)));
 
+        this.nomMoi.setText(String.valueOf(this.monPrenom + " " + this.monNom));
+        this.avatarRMoi.setText(String.valueOf(this.monNom.charAt(0)));
         // Bar de progression
         this.progressBar = (ProgressBar) findViewById(R.id.progressBar);
         // Compteur de temps
@@ -191,7 +197,7 @@ public class QuizActivity extends AppCompatActivity {
         this.time.setText(Integer.toString(infoSec));
 
         for (Button b: this.getListButton()) {
-            b.setBackgroundResource(R.color.colorAccent);
+            b.setBackgroundResource(R.color.colorCircle);
             b.setEnabled(true);
         }
 
@@ -448,6 +454,8 @@ public class QuizActivity extends AppCompatActivity {
         bundle.putInt("id",this.idAdv);
         bundle.putString("nom",String.valueOf(this.nomAdv));
         bundle.putString("prenom",String.valueOf(this.prenomAdv));
+        bundle.putString("MonNom",String.valueOf(this.monNom));
+        bundle.putString("MonPrenom",String.valueOf(this.monPrenom));
         bundle.putInt("score1",this.score1);
         bundle.putInt("score2",this.score2);
         // Ajout de notre boite dans notre prochaine activité

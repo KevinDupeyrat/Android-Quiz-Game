@@ -46,6 +46,8 @@ public class FriendFragment extends Fragment {
     private View rootView;
     private ProgressDialog progressDialog;
     private String jSonFriend = "";
+    private String monNom;
+    private String monPrenom;
 
     private static Timer timer;
     private FriendAdapter adapter;
@@ -244,9 +246,11 @@ public class FriendFragment extends Fragment {
 
         for(Amis amis: amisList)
             if(amis.getId() == MainActivity.getMy_id()) {
-                avatarName.setText(amis.getNom() + " " + amis.getPrenom());
-                prenomInitial.setText(String.valueOf(amis.getNom().charAt(0)));
-                nomInitial.setText(String.valueOf(amis.getPrenom().charAt(0)));
+                monPrenom = amis.getPrenom();
+                monNom = amis.getNom();
+                avatarName.setText(monNom + " " + monPrenom);
+                prenomInitial.setText(String.valueOf(monPrenom.charAt(0)));
+                nomInitial.setText(String.valueOf(monNom.charAt(0)));
             }
 
 
@@ -631,6 +635,9 @@ public class FriendFragment extends Fragment {
         // Création d'une boite
         Bundle bundle = new Bundle();
         // Ajout de l'identifiant dans notre boite
+        bundle.putString("MonNom",monNom);
+        bundle.putString("MonPrenom",monPrenom);
+
         bundle.putInt("id",id);
         bundle.putString("nom",nom);
         bundle.putString("prenom",prenom);

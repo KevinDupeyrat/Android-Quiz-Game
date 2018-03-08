@@ -28,12 +28,33 @@
 
     <!-- 2 imageView -->
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/img1"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:src="@drawable/monavatar"
-        android:layout_below="@+id/progressBar" />
+        <RelativeLayout
+            android:id="@+id/relativeIm1"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@color/colorCircle"
+            android:layout_below="@+id/progressBar">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/img1"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_alignParentEnd="true"
+                android:src="@color/colorCircle"
+                android:layout_alignParentRight="true" />
+
+            <TextView
+                android:id="@+id/initialQuiz1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="A"
+                android:textSize="20dp" />
+
+        </RelativeLayout>
+
+
 
         <RelativeLayout
             android:id="@+id/relativeIm2"
@@ -53,7 +74,7 @@
                 android:layout_alignParentRight="true" />
 
             <TextView
-                android:id="@+id/initialQuiz"
+                android:id="@+id/initialQuiz2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
@@ -65,51 +86,49 @@
 
 
 
+        <!-- 2 textView nom -->
 
+        <TextView
+            android:id="@+id/textNom1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/relativeIm1"
+            android:layout_below="@id/progressBar"
+            android:textColor="@color/colorAccent"
+            android:text="@string/nom2" />
 
-    <!-- 2 textView nom -->
+        <TextView
+            android:id="@+id/textNom2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@id/relativeIm2"
+            android:layout_below="@id/progressBar"
+            android:textColor="@color/colorAccent"
+            android:text="@string/nom1" />
 
-    <TextView
-        android:id="@+id/textNom1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:textColor="@color/colorAccent"
-        android:layout_toRightOf="@id/img1"
-        android:layout_below="@id/progressBar"
-        android:text="@string/nom2" />
+        <!-- 2 textView score -->
 
-    <TextView
-        android:id="@+id/textNom2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="10dp"
-        android:textColor="@color/colorAccent"
-        android:layout_toLeftOf="@id/relativeIm2"
-        android:layout_below="@id/progressBar"
-        android:text="@string/nom1" />
+        <TextView
+            android:id="@+id/textScore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/score1"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/colorAccent"
+            android:layout_below="@id/textNom2"
+            android:layout_toRightOf="@id/relativeIm1"/>
 
-    <!-- 2 textView score -->
-
-    <TextView
-        android:id="@+id/textScore"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:textColor="@color/colorAccent"
-        android:text="@string/score1"
-        android:layout_below="@id/textNom2"
-        android:layout_toRightOf="@id/img1"/>
-
-    <TextView
-        android:id="@+id/textScore2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="10dp"
-        android:textColor="@color/colorAccent"
-        android:text="@string/score2"
-        android:layout_below="@id/textNom1"
-        android:layout_toLeftOf="@id/relativeIm2"/>
+        <TextView
+            android:id="@+id/textScore2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/score2"
+            android:layout_marginRight="10dp"
+            android:textColor="@color/colorAccent"
+            android:layout_below="@id/textNom1"
+            android:layout_toLeftOf="@id/relativeIm2"/>
 
     <!-- 1 textView timer -->
 
