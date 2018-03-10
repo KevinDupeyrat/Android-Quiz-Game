@@ -101,36 +101,13 @@ public class ScanFragment extends Fragment implements ZBarScannerView.ResultHand
     @Override
     public void handleResult(Result result) {
 
-
-        Map<String, String> prop = new HashMap<>();
-
-        // On récupère le resultat sous forme de String
         String code = result.getContents();
-        // On l'affecte à l'activité principale
         MainActivity.setServerCode(code);
-        prop.put("code_server", code);
-        Log.i("Attente", "QRcode : " + code);
-
-        try {
-            prop = PropertiesTools.getProperties(getContext(), "attending");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        String url = prop.get("protocole")
-                + prop.get("ip_adress")
-                + prop.get("path")
-                +"?key=" + code +"&id="+ MainActivity.getMy_id();
-
-        Log.i("URL", url);
-
-
-
-
         // On envoie la demande de connexion
         // au serveur
         Ion.with(getContext())
-                .load( url )
+                .load( PropertiesTools.genURL(getContext(), "attending")
+                        +"?key=" + code +"&id="+ MainActivity.getMy_id())
                 .asJsonObject()
                 .setCallback(new FutureCallback<JsonObject>() {
                     @Override

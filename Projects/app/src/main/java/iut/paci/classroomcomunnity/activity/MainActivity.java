@@ -22,11 +22,6 @@ import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import iut.paci.classroomcomunnity.R;
 import iut.paci.classroomcomunnity.frame.AboutFragment;
@@ -302,29 +297,12 @@ public class MainActivity extends AppCompatActivity {
      */
     private void logOutServer(){
 
-
-        Map<String, String> prop = new HashMap<>();
-
-        try {
-            prop = PropertiesTools.getProperties(getApplicationContext(), "logout");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        String url = prop.get("protocole")
-                + prop.get("ip_adress")
-                + prop.get("path")
-                +"?key=" + MainActivity.getServerCode() +"&id="+ my_id;
-
-        Log.i("URL", url);
-
-
-
-
         // On envoie la demande de connexion
         // au serveur
         Ion.with(getApplicationContext())
-                .load( url )
+                .load( PropertiesTools.genURL(getApplicationContext(), "logout")
+                        +"?key=" + MainActivity.getServerCode()
+                        +"&id="+ my_id)
                 .asJsonObject()
                 .setCallback(new FutureCallback<JsonObject>() {
                     @Override

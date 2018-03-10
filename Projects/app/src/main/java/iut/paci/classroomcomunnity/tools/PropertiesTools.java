@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import iut.paci.classroomcomunnity.activity.MainActivity;
+
 /**
  * Created by dupeyrat on 02/03/18.
  */
@@ -19,7 +21,7 @@ public class PropertiesTools {
      * properties
      * @throws IOException
      */
-    public static Map<String, String> getProperties(Context context, String action) throws IOException {
+    private static Map<String, String> getProperties(Context context, String action) throws IOException {
 
         Map<String, String> map = new HashMap<>();
         Properties appProps = new Properties();
@@ -46,15 +48,40 @@ public class PropertiesTools {
             map.put("path", appProps.getProperty("ckeck_request"));
         else if(action.equals("put_responce_request_friend"))
             map.put("path", appProps.getProperty("put_responce_request_friend"));
+        else if(action.equals("put_response"))
+            map.put("path", appProps.getProperty("put_response"));
+        else if(action.equals("get_score_advers"))
+            map.put("path", appProps.getProperty("get_score_advers"));
 
-
-
-
-
-
-
-        Log.i("Properties Server", "Ip server : " + map.get("protocole") + map.get("ip_adress"));
 
         return map;
+    }
+
+
+    /**
+     * Méthode qui permet de retourner la bonne URL
+     * en fonction de l'action que nous voulons effectuer
+     *
+     * @param action
+     * @return
+     */
+    public static String genURL(Context context, String action) {
+
+        Map<String, String> prop = new HashMap<>();
+
+        try {
+            prop = PropertiesTools.getProperties(context, action);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        String url = prop.get("protocole")
+                + prop.get("ip_adress")
+                + prop.get("path");
+
+        Log.i("URL QUESTION", url);
+
+        return url;
+
     }
 }

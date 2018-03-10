@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,6 +26,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import iut.paci.classroomcomunnity.R;
 import iut.paci.classroomcomunnity.bean.Question;
@@ -64,6 +67,8 @@ public class QuizActivity extends AppCompatActivity {
     private String nomAdv;
     private String prenomAdv;
 
+    private Timer timerScore;
+
 
     private List<Button> getListButton() {
         return LISTBUTTON;
@@ -83,10 +88,7 @@ public class QuizActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
 
-        // this.initQuestionLocal();
         this.initQuestion();
-//        this.initButton();
-//        this.initProgressBar();
 
         // ici on vérifie que des données n'ont pas
         // étaient sauvegardé par onStop()
@@ -96,8 +98,19 @@ public class QuizActivity extends AppCompatActivity {
             progressStatus = savedInstanceState.getInt("progressStatus");
             score1 = savedInstanceState.getInt("score1");
             timeOut = savedInstanceState.getBoolean("timeOut");
-
         }
+
+
+        timerScore = new Timer();
+        timerScore.schedule(new TimerTask() {
+
+            @Override
+            public void run() {
+
+                getScoreAdvers();
+            }
+        }, 1000, 1000);
+
 
     }
 
@@ -220,10 +233,11 @@ public class QuizActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     timeOut = true;
-                    checkButton(boutonSelect);
+                    final boolean reponse = checkButton(boutonSelect);
                     (new Handler()).post(new Runnable() {
                         @Override
                         public void run() {
+                            sendServerResponse(reponse);
                             reinitialise();
                         }
                     });
@@ -293,25 +307,11 @@ public class QuizActivity extends AppCompatActivity {
      */
     private void initQuestion() {
 
-        Map<String, String> prop = new HashMap<>();
 
-        try {
-            prop = PropertiesTools.getProperties(getApplicationContext(), "question");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        String url = prop.get("protocole")
-                + prop.get("ip_adress")
-                + prop.get("path")
-                +"?key="+ MainActivity.getServerCode() +
-                "&id=1";
-
-        Log.i("URL QUESTION", url);
-
-
-        Ion.with(getApplicationContext()) //998889235
-                .load(url)
+        Ion.with(getApplicationContext())
+                .load(PropertiesTools.genURL(getApplicationContext(),"question")
+                        +"?key="+ MainActivity.getServerCode() +
+                        "&id=" + MainActivity.getMy_id())
                 .asString()
                 .withResponse()
                 .setCallback(new FutureCallback<Response<String>>() {
@@ -329,13 +329,36 @@ public class QuizActivity extends AppCompatActivity {
                             // Si elle renvoie False c'est qu'il n'y as pas d'erreur
                             // et on peut passer à la suite
                             if(ErrorServerTools.errorManager(response, getApplicationContext(), null)){
-                                json = response.getResult();
-                                Log.i("QUESTION JSON", response.getResult());
-                                randomQuestion = JsonTools.getQuestion(json);
 
-                                initButton();
-                                initProgressBar();
-                                return;
+                                System.out.println(response.getResult());
+
+                                if(!response.getResult().equals("fin")) {
+                                    json = response.getResult();
+                                    Log.i("QUESTION JSON", response.getResult());
+                                    randomQuestion = JsonTools.getQuestion(json);
+
+                                    initButton();
+                                    initProgressBar();
+                                    return;
+                                } else {
+
+                                    TextView textView = new TextView(getApplicationContext());
+
+                                    if(score1 > score2)
+                                        textView.setText("Vous avez perdu :( ");
+                                    else if(score1 < score2)
+                                            textView.setText("Vous avez ganger :) ");
+                                    else
+                                        textView.setText("Égalité parfaite !!");
+
+
+                                    PopupWindow popupWindow = new PopupWindow(getApplicationContext());
+                                    popupWindow.setContentView(textView);
+
+                                    doWait();
+                                    finish();
+                                }
+
                             } else {
 
                                 // Si nous avons une erreur, on ferme l'activité
@@ -346,10 +369,6 @@ public class QuizActivity extends AppCompatActivity {
                         }
                     }
                 });
-
-
-       // Log.i("Question", json);
-
     }
 
 
@@ -374,7 +393,7 @@ public class QuizActivity extends AppCompatActivity {
      *
      * @param button
      */
-    private void checkButton(Button button) {
+    private boolean checkButton(Button button) {
 
         // Si la reponse est fausse
         if (!button.getText().toString().equals(this.getGoodAnswer())) {
@@ -402,8 +421,10 @@ public class QuizActivity extends AppCompatActivity {
                 b.setOnClickListener(null);
             }
 
-            this.score2 += 5;
-            this.textScore2.setText(Integer.toString(this.score2));
+           // this.score2 += 5;
+           // this.textScore2.setText(Integer.toString(this.score2));
+
+            return false;
 
         } else {
             // On indique à l'utilisateur qu'il a gangé
@@ -413,6 +434,8 @@ public class QuizActivity extends AppCompatActivity {
 
             // On désactive tous les autres boutons
             this.winButton();
+
+            return true;
         }
     }
 
@@ -437,6 +460,51 @@ public class QuizActivity extends AppCompatActivity {
         }
     }
 
+
+    /**
+     * Méthode qui va permettre de récupérer
+     * le score de l'adversaire
+     */
+    private void getScoreAdvers() {
+
+        Ion.with(getApplicationContext())
+                .load(PropertiesTools.genURL(getApplicationContext(),"get_score_advers")
+                        +"?key="+ MainActivity.getServerCode() +
+                        "&my_id=" + MainActivity.getMy_id())
+                .asString()
+                .withResponse()
+                .setCallback(new FutureCallback<Response<String>>() {
+                    @Override
+                    public void onCompleted(Exception e, Response<String> response) {
+
+
+                        // Si la réponse est null
+                        if(response == null){
+                            Toast.makeText(getApplicationContext(), "Erreur: Le serveur ne repond pas !", Toast.LENGTH_SHORT).show();
+
+                        } else {
+
+                            // On verrifi si la requête nous a renvoyer une erreur.
+                            // Si elle renvoie False c'est qu'il n'y as pas d'erreur
+                            // et on peut passer à la suite
+                            if(ErrorServerTools.errorManager(response, getApplicationContext(), null)){
+
+                                System.out.println(response.getResult());
+                                if(response.getResult().equals("0"))
+                                    score2 = 0;
+                                else
+                                    score2 = Integer.getInteger(response.getResult());
+
+
+                            } else {
+
+
+                            }
+                        }
+                    }
+                });
+
+    }
 
     /**
      * Méthode de réinitialisation
@@ -488,7 +556,38 @@ public class QuizActivity extends AppCompatActivity {
      * Méthode qui permet d'envoyer
      * notre reponse à la question au server
      */
-    private void sendServerResponse() {
+    private void sendServerResponse(boolean reponse) {
+
+        Ion.with(getApplicationContext())
+                .load(PropertiesTools.genURL(getApplicationContext(),"put_response")
+                        +"?key="+ MainActivity.getServerCode()
+                        +"&id=1"
+                        +"&reponse=" + reponse)
+                .asString()
+                .withResponse()
+                .setCallback(new FutureCallback<Response<String>>() {
+                    @Override
+                    public void onCompleted(Exception e, Response<String> response) {
+
+
+                        // Si la réponse est null
+                        if(response == null){
+                            Toast.makeText(getApplicationContext(), "Erreur: Le serveur ne repond pas !", Toast.LENGTH_SHORT).show();
+
+                        } else {
+
+                            // On verrifi si la requête nous a renvoyer une erreur.
+                            // Si elle renvoie False c'est qu'il n'y as pas d'erreur
+                            // et on peut passer à la suite
+                            if(!ErrorServerTools.errorManager(response, getApplicationContext(), null)){
+
+                                callback();
+
+                            }
+                        }
+                    }
+                });
 
     }
+
 }

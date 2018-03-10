@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,10 +18,7 @@ import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.koushikdutta.ion.Response;
 
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -49,14 +45,14 @@ public class FriendFragment extends Fragment {
     private String monNom;
     private String monPrenom;
 
-    private static Timer timer;
+    private Timer timer_response;
     private FriendAdapter adapter;
     private List<Amis> amisList;
 
 
-    public static Timer getTimer() {
-        return timer;
-    }
+//    public static Timer getTimerResponse() {
+//        return timer_response;
+//    }
 
 
     public FriendFragment() {}
@@ -96,64 +92,50 @@ public class FriendFragment extends Fragment {
      */
     public void refreshFriends() {
 
-        timer = new Timer();
-        timer.schedule(new TimerTask() {
+        timer_response = new Timer();
+        timer_response.schedule(new TimerTask() {
 
             @Override
             public void run() {
 
-                Map<String, String> prop = new HashMap<>();
-
-                try {
-                    prop = PropertiesTools.getProperties(getContext(), "friends");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                String url = prop.get("protocole")
-                        + prop.get("ip_adress")
-                        + prop.get("path")
-                        +"?key="+ MainActivity.getServerCode();
-
-                Log.i("URL", url);
-
-                // Objet Ion permet comme en Ajax de récupérer une
-                // reponse d'un server via HTTP.
-                // Ici nous voulons récupérer un fichier Json
-                Ion.with(getContext())
-                        //paci.iut.1235
-                        .load(url)
-                        .asString()
-                        .withResponse() // Gestion des reponses
-                        .setCallback(new FutureCallback<Response<String>>() {
-                            @Override
-                            public void onCompleted(Exception e, Response<String> response) {
+        // Objet Ion permet comme en Ajax de récupérer une
+        // reponse d'un server via HTTP.
+        // Ici nous voulons récupérer un fichier Json
+        Ion.with(getContext())
+                //paci.iut.1235
+                .load(PropertiesTools.genURL(getContext(), "friends")
+                        +"?key="+ MainActivity.getServerCode())
+                .asString()
+                .withResponse() // Gestion des reponses
+                .setCallback(new FutureCallback<Response<String>>() {
+                    @Override
+                    public void onCompleted(Exception e, Response<String> response) {
 
 
-                                // Si la réponse est null
-                                if(response == null){
-                                    Toast.makeText(getContext(), "Erreur: Le serveur ne repond pas !", Toast.LENGTH_SHORT).show();
+                        // Si la réponse est null
+                        if(response == null){
+                            Toast.makeText(getContext(), "Erreur: Le serveur ne repond pas !", Toast.LENGTH_SHORT).show();
 
-                                } else {
+                        } else {
 
-                                    // On verrifi si la requête nous a renvoyer une erreur.
-                                    // Si elle renvoie False c'est qu'il n'y as pas d'erreur
-                                    // et on peut passer à la suite
-                                    if(ErrorServerTools.errorManager(response, getContext(), getActivity())){
-                                        jSonFriend = response.getResult();
-                                        amisList = JsonTools.getAmis(jSonFriend);
+                            // On verrifi si la requête nous a renvoyer une erreur.
+                            // Si elle renvoie False c'est qu'il n'y as pas d'erreur
+                            // et on peut passer à la suite
+                            if(ErrorServerTools.errorManager(response, getContext(), getActivity())){
+                                jSonFriend = response.getResult();
+                                amisList = JsonTools.getAmis(jSonFriend);
 
-                                        // On efface l'adapter
-                                        adapter.clear();
-                                        // On rajoute la nouvelle liste
-                                        adapter.addAll(amisList);
-                                        // On notifie du chagement
-                                        adapter.notifyDataSetChanged();
-                                    }
-                                }
-
+                                // On efface l'adapter
+                                adapter.clear();
+                                // On rajoute la nouvelle liste
+                                adapter.addAll(amisList);
+                                // On notifie du chagement
+                                adapter.notifyDataSetChanged();
                             }
-                        });
+                        }
+
+                    }
+                });
             }
         }, 10000, 10000);
 
@@ -174,26 +156,14 @@ public class FriendFragment extends Fragment {
         this.progressDialog.setCancelable(false);
         this.progressDialog.show();
 
-        Map<String, String> prop = new HashMap<>();
-
-        try {
-            prop = PropertiesTools.getProperties(getContext(), "friends");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        String url = prop.get("protocole")
-                + prop.get("ip_adress")
-                + prop.get("path")
-                +"?key="+ MainActivity.getServerCode();
-
 
         // Objet Ion permet comme en Ajax de récupérer une
         // reponse d'un server via HTTP.
         // Ici nous voulons récupérer un fichier Json
         Ion.with(getContext())
                 //paci.iut.1235
-                .load(url)
+                .load(PropertiesTools.genURL(getContext(), "friends")
+                        +"?key="+ MainActivity.getServerCode())
                 .asString()
                 .withResponse() // Gestion des reponses
                 .setCallback(new FutureCallback<Response<String>>() {
@@ -307,28 +277,15 @@ public class FriendFragment extends Fragment {
         this.progressDialog.setCancelable(false);
         this.progressDialog.show();
 
-        Map<String, String> prop = new HashMap<>();
-
-        try {
-            prop = PropertiesTools.getProperties(getContext(), "put_request_friend");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        String url = prop.get("protocole")
-                + prop.get("ip_adress")
-                + prop.get("path")
-                +"?key="+ MainActivity.getServerCode()
-                +"&my_id=" + MainActivity.getMy_id()
-                +"&friend_id=" + amis.getId();
-
-
         // Objet Ion permet comme en Ajax de récupérer une
         // reponse d'un server via HTTP.
         // Ici nous voulons récupérer un fichier Json
         Ion.with(getContext())
                 //paci.iut.1235
-                .load(url)
+                .load(PropertiesTools.genURL(getContext(), "put_request_friend")
+                        +"?key="+ MainActivity.getServerCode()
+                        +"&my_id=" + MainActivity.getMy_id()
+                        +"&friend_id=" + amis.getId())
                 .asString()
                 .withResponse() // Gestion des reponses
                 .setCallback(new FutureCallback<Response<String>>() {
@@ -350,9 +307,10 @@ public class FriendFragment extends Fragment {
                             // et on peut passer à la suite
                             if(ErrorServerTools.errorManager(response, getContext(), getActivity())){
 
-                                timer.cancel();
-                                timer = new Timer();
-                                timer.schedule(new TimerTask() {
+                                timer_response.cancel();
+                                timer_response.purge();
+                                timer_response = new Timer();
+                                timer_response.schedule(new TimerTask() {
 
                                     @Override
                                     public void run() {
@@ -375,27 +333,14 @@ public class FriendFragment extends Fragment {
      */
     private void verifFriendAsRespondedRequest(final Amis amis) {
 
-        Map<String, String> prop = new HashMap<>();
-
-        try {
-            prop = PropertiesTools.getProperties(getContext(), "get_response_friend");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        String url = prop.get("protocole")
-                + prop.get("ip_adress")
-                + prop.get("path")
-                +"?key="+ MainActivity.getServerCode()
-                +"&my_id=" + MainActivity.getMy_id();
-
-
         // Objet Ion permet comme en Ajax de récupérer une
         // reponse d'un server via HTTP.
         // Ici nous voulons récupérer un fichier Json
         Ion.with(getContext())
                 //paci.iut.1235
-                .load(url)
+                .load(PropertiesTools.genURL(getContext(), "get_response_friend")
+                        +"?key="+ MainActivity.getServerCode()
+                        +"&my_id=" + MainActivity.getMy_id())
                 .asString()
                 .withResponse() // Gestion des reponses
                 .setCallback(new FutureCallback<Response<String>>() {
@@ -418,7 +363,8 @@ public class FriendFragment extends Fragment {
                             if(ErrorServerTools.errorManager(response, getContext(), getActivity())){
 
                                 if(response.getResult().equals("yes")) {
-                                    timer.cancel();
+                                    timer_response.cancel();
+                                    timer_response.purge();
                                     goToQuiz(amis);
                                 } else if(response.getResult().equals("no")) {
                                     //TODO: Gérer une reponse négative
@@ -443,8 +389,8 @@ public class FriendFragment extends Fragment {
      */
     public void verifHaveRequest() {
 
-        timer = new Timer();
-        timer.schedule(new TimerTask() {
+        timer_response = new Timer();
+        timer_response.schedule(new TimerTask() {
 
             @Override
             public void run() {
@@ -466,26 +412,14 @@ public class FriendFragment extends Fragment {
      */
     private void loopVerifHaveRequest() {
 
-        Map<String, String> prop = new HashMap<>();
-
-        try {
-            prop = PropertiesTools.getProperties(getContext(), "ckeck_request");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        String url = prop.get("protocole")
-                + prop.get("ip_adress")
-                + prop.get("path")
-                +"?key="+ MainActivity.getServerCode()
-                +"&my_id=" + MainActivity.getMy_id();
-
         // Objet Ion permet comme en Ajax de récupérer une
         // reponse d'un server via HTTP.
         // Ici nous voulons récupérer un fichier Json
         Ion.with(getContext())
                 //paci.iut.1235
-                .load(url)
+                .load(PropertiesTools.genURL(getContext(), "ckeck_request")
+                        +"?key="+ MainActivity.getServerCode()
+                        +"&my_id=" + MainActivity.getMy_id())
                 .asString()
                 .withResponse() // Gestion des reponses
                 .setCallback(new FutureCallback<Response<String>>() {
@@ -517,7 +451,8 @@ public class FriendFragment extends Fragment {
                                     builder.setPositiveButton("Yes", new DialogInterface.OnClickListener(){
                                         public void onClick(DialogInterface dialog, int id) {
 
-                                            timer.cancel();
+                                            timer_response.cancel();
+                                            timer_response.purge();
                                             pushAnswerToRequest(response.getResult(),"yes");
 
                                         }
@@ -551,30 +486,16 @@ public class FriendFragment extends Fragment {
      */
     private void pushAnswerToRequest(final String friend_id, final String answer) {
 
-
-        Map<String, String> prop = new HashMap<>();
-
-        try {
-            prop = PropertiesTools.getProperties(getContext(), "put_responce_request_friend");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        String url = prop.get("protocole")
-                + prop.get("ip_adress")
-                + prop.get("path")
-                +"?key="+ MainActivity.getServerCode()
-                +"&my_id=" + MainActivity.getMy_id()
-                +"&friend_id=" + friend_id
-                +"&response=" + answer;
-
-
         // Objet Ion permet comme en Ajax de récupérer une
         // reponse d'un server via HTTP.
         // Ici nous voulons récupérer un fichier Json
         Ion.with(getContext())
                 //paci.iut.1235
-                .load(url)
+                .load(PropertiesTools.genURL(getContext(), "put_responce_request_friend")
+                        +"?key="+ MainActivity.getServerCode()
+                        +"&my_id=" + MainActivity.getMy_id()
+                        +"&friend_id=" + friend_id
+                        +"&response=" + answer)
                 .asString()
                 .withResponse() // Gestion des reponses
                 .setCallback(new FutureCallback<Response<String>>() {
@@ -598,7 +519,8 @@ public class FriendFragment extends Fragment {
 
                                 if(answer.equals("yes")) {
 
-                                    timer.cancel();
+                                    timer_response.cancel();
+                                    timer_response.purge();
 
                                     for (Amis amis : amisList) {
                                         if (String.valueOf(amis.getId()).equals(friend_id)) {
