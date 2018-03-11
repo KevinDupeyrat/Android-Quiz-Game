@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,6 +47,7 @@ public class FriendFragment extends Fragment {
     private String monPrenom;
 
     private Timer timer_response;
+    private Timer timer_friend;
     private FriendAdapter adapter;
     private List<Amis> amisList;
 
@@ -88,8 +90,8 @@ public class FriendFragment extends Fragment {
      */
     public void refreshFriends() {
 
-        timer_response = new Timer();
-        timer_response.schedule(new TimerTask() {
+        timer_friend = new Timer();
+        timer_friend.schedule(new TimerTask() {
 
             @Override
             public void run() {
@@ -266,6 +268,7 @@ public class FriendFragment extends Fragment {
     private void pushFriendRequest(final Amis amis) {
 
 
+        this.progressDialog.dismiss();
         // Initialisation de la bar de progression
         this.progressDialog = new ProgressDialog(getContext());
         this.progressDialog.setMessage(getString(R.string.wait_friend));
@@ -343,9 +346,7 @@ public class FriendFragment extends Fragment {
                     @Override
                     public void onCompleted(Exception e, Response<String> response) {
 
-                        // Une fois la requête terminé nous
-                        // fermons la bar de progression
-                        progressDialog.dismiss();
+
 
                         // Si la réponse est null
                         if(response == null){
@@ -357,6 +358,10 @@ public class FriendFragment extends Fragment {
                             // Si elle renvoie False c'est qu'il n'y as pas d'erreur
                             // et on peut passer à la suite
                             if(ErrorServerTools.errorManager(response, getContext(), getActivity())){
+
+                                // Une fois la requête terminé nous
+                                // fermons la bar de progression
+                                progressDialog.dismiss();
 
                                 if(response.getResult().equals("yes")) {
                                     timer_response.cancel();
@@ -542,6 +547,9 @@ public class FriendFragment extends Fragment {
      */
     private void goToQuiz(Amis ami){
 
+        this.timer_friend.cancel();
+        this.timer_friend.purge();
+
         // Nous récupérons toutes les info que
         // nous avons besoin pour la suite
         String nom = ami.getNom();
@@ -565,6 +573,11 @@ public class FriendFragment extends Fragment {
         intent.putExtras(bundle);
         //intent.putExtra("fragmentActivity",getActivity());
         // On demarre une activité
+
+        // On redirige en suite vers la page principale avant d'ouvrir le quiz
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.contentFrame, new HomeFragment()).commit();
+
         startActivity(intent);
 
     }

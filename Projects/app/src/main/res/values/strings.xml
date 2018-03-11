@@ -26,4 +26,8 @@
     <string name="wait_request">Please wait, your request are submit. . .</string>
     <string name="wait_answer_request">Please wait, your friend will answer you. . .</string>
 
+    <string name="you_lose">You Lose :,( </string>
+    <string name="you_win">You Win :) </string>
+    <string name="egality">Perfect Egality !</string>
+
 </resources>

@@ -4,12 +4,15 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,7 +60,7 @@ public class QuizActivity extends AppCompatActivity {
     private int progressStatus;
     private boolean timeOut;
     private int score1 = 0;
-    private int score2 = 0;
+    private static int score2 = 0;
     private Question randomQuestion;
     private String json;
 
@@ -66,8 +69,6 @@ public class QuizActivity extends AppCompatActivity {
     private String monPrenom;
     private String nomAdv;
     private String prenomAdv;
-
-    private Timer timerScore;
 
 
     private List<Button> getListButton() {
@@ -116,6 +117,7 @@ public class QuizActivity extends AppCompatActivity {
         icicle.putInt("infoSec", infoSec);
         icicle.putInt("progressStatus", progressStatus);
         icicle.putInt("score1", score1);
+        icicle.putInt("score2", score2);
         icicle.putBoolean("timeOut", timeOut);
 
         //TODO: Gérer les boutons
@@ -147,7 +149,7 @@ public class QuizActivity extends AppCompatActivity {
         this.monNom = getIntent().getExtras().getString("MonNom");
         this.monPrenom = getIntent().getExtras().getString("MonPrenom");
         this.score1 = getIntent().getExtras().getInt("score1");
-        this.score2 = getIntent().getExtras().getInt("score2");
+       // this.score2 = getIntent().getExtras().getInt("score2");
         this.idAdv = getIntent().getExtras().getInt("id");
 
         // Création de la liste de bouton
@@ -318,7 +320,6 @@ public class QuizActivity extends AppCompatActivity {
 
                                 if(!response.getResult().equals("fin")) {
                                     json = response.getResult();
-                                    Log.i("QUESTION JSON", response.getResult());
                                     randomQuestion = JsonTools.getQuestion(json);
 
                                     initButton();
@@ -326,18 +327,17 @@ public class QuizActivity extends AppCompatActivity {
                                     return;
                                 } else {
 
-                                    TextView textView = new TextView(getApplicationContext());
+                                    String textView;
 
-                                    if(score1 > score2)
-                                        textView.setText("Vous avez perdu :( ");
-                                    else if(score1 < score2)
-                                            textView.setText("Vous avez ganger :) ");
+                                    if(score1 < score2)
+                                        textView = "-- Vous avez gangé :) --";
+                                    else if(score1 == score2)
+                                        textView = "-- Égalité parfaite !! --";
                                     else
-                                        textView.setText("Égalité parfaite !!");
+                                        textView = "-- Vous avez perdu :( --";
 
+                                    Toast.makeText(getApplicationContext(), textView, Toast.LENGTH_LONG).show();
 
-                                    PopupWindow popupWindow = new PopupWindow(getApplicationContext());
-                                    popupWindow.setContentView(textView);
 
                                     doWait();
                                     finish();
@@ -468,18 +468,18 @@ public class QuizActivity extends AppCompatActivity {
 
                         } else {
 
-                            //TODO: On ne passe pas dans le IF
-
                             // On verrifi si la requête nous a renvoyer une erreur.
                             // Si elle renvoie False c'est qu'il n'y as pas d'erreur
                             // et on peut passer à la suite
                             if(ErrorServerTools.errorManager(response, getApplicationContext(), null)){
-
-                                System.out.println("QuizActivity : Score adverse" + response.getResult());
-                                if(response.getResult().equals("0") || response.getResult() == null)
-                                    textScore2.setText(String.valueOf(0));
-                                else
+                                System.out.println("QuizActivity : Score adverse " + response.getResult());
+                                if(response.getResult() != null) {
+                                    System.out.println("QuizActivity APRES LE IF : Score adverse " + response.getResult());
+                                    //TODO: Les variable ne sont pas mis à jour ...
                                     textScore2.setText(String.valueOf(response.getResult()));
+                                    score2 = Integer.parseInt(response.getResult());
+                                    System.out.println("QuizActivity APRES LE IF : Variable 'score2' " + score2);
+                                }
 
                             }
                         }
