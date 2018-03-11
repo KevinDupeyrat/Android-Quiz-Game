@@ -50,10 +50,6 @@ public class FriendFragment extends Fragment {
     private List<Amis> amisList;
 
 
-//    public static Timer getTimerResponse() {
-//        return timer_response;
-//    }
-
 
     public FriendFragment() {}
 
@@ -444,6 +440,8 @@ public class FriendFragment extends Fragment {
 
                                 if(!response.getResult().equals("please wait")){
 
+                                    timer_response.cancel();
+                                    timer_response.purge();
 
                                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                                     builder.setTitle("Tu veux jouer avec moi ?");
@@ -451,8 +449,6 @@ public class FriendFragment extends Fragment {
                                     builder.setPositiveButton("Yes", new DialogInterface.OnClickListener(){
                                         public void onClick(DialogInterface dialog, int id) {
 
-                                            timer_response.cancel();
-                                            timer_response.purge();
                                             pushAnswerToRequest(response.getResult(),"yes");
 
                                         }

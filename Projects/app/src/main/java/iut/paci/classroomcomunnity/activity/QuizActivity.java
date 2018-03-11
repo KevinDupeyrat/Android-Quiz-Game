@@ -100,18 +100,6 @@ public class QuizActivity extends AppCompatActivity {
             timeOut = savedInstanceState.getBoolean("timeOut");
         }
 
-
-        timerScore = new Timer();
-        timerScore.schedule(new TimerTask() {
-
-            @Override
-            public void run() {
-
-                getScoreAdvers();
-            }
-        }, 1000, 1000);
-
-
     }
 
 
@@ -223,25 +211,21 @@ public class QuizActivity extends AppCompatActivity {
         // Ajout du listeneur à tous les boutons
         // et du text sur les questions
         for(int i = 0; i <  reponses.size(); i++) {
+
             final Button boutonSelect = this.getListButton().get(i);
             boutonSelect.setText(reponses.get(i).getReponse());
             // On enregistre la bonne reponse pour la suite
-            if (reponses.get(i).isBonneReponse() == 1)
+            if (reponses.get(i).isBonneReponse() == 1) {
                 this.setGoodAnswer(reponses.get(i).getReponse());
+            }
 
             boutonSelect.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     timeOut = true;
-                    final boolean reponse = checkButton(boutonSelect);
-                    (new Handler()).post(new Runnable() {
-                        @Override
-                        public void run() {
-                            sendServerResponse(reponse);
-                            reinitialise();
-                        }
-                    });
-
+                    boolean reponse = checkButton(boutonSelect);
+                    sendServerResponse(reponse);
+                    reinitialise();
                 }
             });
         }
@@ -484,20 +468,18 @@ public class QuizActivity extends AppCompatActivity {
 
                         } else {
 
+                            //TODO: On ne passe pas dans le IF
+
                             // On verrifi si la requête nous a renvoyer une erreur.
                             // Si elle renvoie False c'est qu'il n'y as pas d'erreur
                             // et on peut passer à la suite
                             if(ErrorServerTools.errorManager(response, getApplicationContext(), null)){
 
-                                System.out.println(response.getResult());
-                                if(response.getResult().equals("0"))
-                                    score2 = 0;
+                                System.out.println("QuizActivity : Score adverse" + response.getResult());
+                                if(response.getResult().equals("0") || response.getResult() == null)
+                                    textScore2.setText(String.valueOf(0));
                                 else
-                                    score2 = Integer.getInteger(response.getResult());
-
-
-                            } else {
-
+                                    textScore2.setText(String.valueOf(response.getResult()));
 
                             }
                         }
@@ -512,6 +494,7 @@ public class QuizActivity extends AppCompatActivity {
      */
     private void reinitialise() {
 
+        this.getScoreAdvers();
 
         doWait();
 
@@ -561,7 +544,7 @@ public class QuizActivity extends AppCompatActivity {
         Ion.with(getApplicationContext())
                 .load(PropertiesTools.genURL(getApplicationContext(),"put_response")
                         +"?key="+ MainActivity.getServerCode()
-                        +"&id=1"
+                        +"&my_id=" + MainActivity.getMy_id()
                         +"&reponse=" + reponse)
                 .asString()
                 .withResponse()
@@ -583,6 +566,8 @@ public class QuizActivity extends AppCompatActivity {
 
                                 callback();
 
+                            } else {
+                                System.out.println("REPONSEEEE ::: " + response.getResult());
                             }
                         }
                     }
