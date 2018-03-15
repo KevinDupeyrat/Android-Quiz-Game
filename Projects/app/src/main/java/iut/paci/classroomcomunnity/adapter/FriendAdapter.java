@@ -1,10 +1,6 @@
 package iut.paci.classroomcomunnity.adapter;
 
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.LightingColorFilter;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -23,7 +19,7 @@ import iut.paci.classroomcomunnity.R;
 import iut.paci.classroomcomunnity.bean.Amis;
 
 /**
- * Created by dupeyrat on 18/02/18.
+ * Created by Kevin Dupeyrat on 18/02/18.
  *
  * Class Adapter qui va permetre de mettre les informations
  * relative a la Class Amis dans la ListView
@@ -69,12 +65,7 @@ public class FriendAdapter extends ArrayAdapter<Amis> {
 
         View layout = convertView;
         Amis ami = amisList.get(position);
-        // Pour tous les amis sauf pour nous (je suis l'ID 11 dans la liste)
 
-
-
-        // On vérifi que la View est vide avant de
-        // la modifier
         if(convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(this.context);
             layout = inflater.inflate(itemRessourceId, parent, false);
@@ -86,11 +77,6 @@ public class FriendAdapter extends ArrayAdapter<Amis> {
         ImageView connected = (ImageView) layout.findViewById(R.id.connected);
         TextView initial = (TextView) layout.findViewById(R.id.initial);
         CircleImageView avatarCircle = (CircleImageView) layout.findViewById(R.id.avatarFiend);
-
-//        int r = getRandomColor(129, 255);
-//        int g = getRandomColor(129, 255);
-//        int b = getRandomColor(129, 255);
-//        avatarCircle.setColorFilter(Color.rgb(r, g, b));
 
 
         if(ami.isPresent() == 0) {
@@ -108,8 +94,6 @@ public class FriendAdapter extends ArrayAdapter<Amis> {
         }
 
 
-        // On met à jour ces deux views avec les information
-        // sur l'amis séléctionné
         nameFriend.setText(ami.getNom());
         initial.setText(String.valueOf(ami.getNom().charAt(0)));
         lastScoreFriend.setText("Dernier score : " + ami.getLastScore());
@@ -118,11 +102,5 @@ public class FriendAdapter extends ArrayAdapter<Amis> {
         // On retourne le Layout modifié
         return layout;
     }
-
-    private int getRandomColor(int min, int max) {
-
-        return (int) (Math.random() * (max - min)) + min;
-    }
-
 
 }

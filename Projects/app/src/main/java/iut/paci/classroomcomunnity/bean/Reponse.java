@@ -3,7 +3,7 @@ package iut.paci.classroomcomunnity.bean;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created by dupeyrat on 28/02/18.
+ * Created by Kevin Dupeyrat on 28/02/18.
  *
  * Class qui représente une reponse.
  * Elle est composé de la reponse et

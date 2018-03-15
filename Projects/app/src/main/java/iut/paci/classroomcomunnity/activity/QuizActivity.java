@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.koushikdutta.ion.Response;
@@ -59,8 +60,8 @@ public class QuizActivity extends AppCompatActivity {
     private int infoSec;
     private int progressStatus;
     private boolean timeOut;
-    private int score1 = 0;
-    private static int score2 = 0;
+    private static int score1 = 0;
+    private static int score2;
     private Question randomQuestion;
     private String json;
 
@@ -91,8 +92,6 @@ public class QuizActivity extends AppCompatActivity {
 
         this.initQuestion();
 
-        // ici on vérifie que des données n'ont pas
-        // étaient sauvegardé par onStop()
         if (savedInstanceState != null){
 
             infoSec = savedInstanceState.getInt("infoSec");
@@ -119,8 +118,6 @@ public class QuizActivity extends AppCompatActivity {
         icicle.putInt("score1", score1);
         icicle.putInt("score2", score2);
         icicle.putBoolean("timeOut", timeOut);
-
-        //TODO: Gérer les boutons
     }
 
 
@@ -149,7 +146,6 @@ public class QuizActivity extends AppCompatActivity {
         this.monNom = getIntent().getExtras().getString("MonNom");
         this.monPrenom = getIntent().getExtras().getString("MonPrenom");
         this.score1 = getIntent().getExtras().getInt("score1");
-       // this.score2 = getIntent().getExtras().getInt("score2");
         this.idAdv = getIntent().getExtras().getInt("id");
 
         // Création de la liste de bouton
@@ -174,9 +170,9 @@ public class QuizActivity extends AppCompatActivity {
 
         this.nomMoi.setText(String.valueOf(this.monPrenom + " " + this.monNom));
         this.avatarRMoi.setText(String.valueOf(this.monNom.charAt(0)));
-        // Bar de progression
+
         this.progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        // Compteur de temps
+
         this.time = (TextView) findViewById(R.id.textTimer);
 
         this.textScore1.setText(String.valueOf(this.score1));
@@ -204,19 +200,14 @@ public class QuizActivity extends AppCompatActivity {
             b.setEnabled(true);
         }
 
-        // On récupère la liste de reponses
         List<Reponse> reponses = this.randomQuestion.getReponses();
-
         Collections.shuffle(reponses);
 
-
-        // Ajout du listeneur à tous les boutons
-        // et du text sur les questions
         for(int i = 0; i <  reponses.size(); i++) {
 
             final Button boutonSelect = this.getListButton().get(i);
             boutonSelect.setText(reponses.get(i).getReponse());
-            // On enregistre la bonne reponse pour la suite
+
             if (reponses.get(i).isBonneReponse() == 1) {
                 this.setGoodAnswer(reponses.get(i).getReponse());
             }
@@ -243,7 +234,6 @@ public class QuizActivity extends AppCompatActivity {
      */
     private void initProgressBar() {
 
-        // Nouveau Thread
         thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -255,10 +245,8 @@ public class QuizActivity extends AppCompatActivity {
                         @Override
                         public void run() {
 
-                            // Mise à jour de la bar
                             progressBar.setProgress(progressStatus);
 
-                            // Mise à jour du compteur
                             time.setText(Integer.toString(infoSec));
 
                             Log.i("Dans le Runnable", ""+progressBar);
@@ -273,7 +261,7 @@ public class QuizActivity extends AppCompatActivity {
                     });
 
                     doWait();
-                    // On incrémante le status de la bar
+
                     progressStatus++;
                     infoSec --;
 
@@ -304,16 +292,11 @@ public class QuizActivity extends AppCompatActivity {
                     @Override
                     public void onCompleted(Exception e, Response<String> response) {
 
-
-                        // Si la réponse est null
                         if(response == null){
                             Toast.makeText(getApplicationContext(), "Erreur: Le serveur ne repond pas !", Toast.LENGTH_SHORT).show();
 
                         } else {
 
-                            // On verrifi si la requête nous a renvoyer une erreur.
-                            // Si elle renvoie False c'est qu'il n'y as pas d'erreur
-                            // et on peut passer à la suite
                             if(ErrorServerTools.errorManager(response, getApplicationContext(), null)){
 
                                 System.out.println(response.getResult());
@@ -329,7 +312,7 @@ public class QuizActivity extends AppCompatActivity {
 
                                     String textView;
 
-                                    if(score1 < score2)
+                                    if(score1 > score2)
                                         textView = "-- Vous avez gangé :) --";
                                     else if(score1 == score2)
                                         textView = "-- Égalité parfaite !! --";
@@ -338,16 +321,11 @@ public class QuizActivity extends AppCompatActivity {
 
                                     Toast.makeText(getApplicationContext(), textView, Toast.LENGTH_LONG).show();
 
-
-                                    doWait();
                                     finish();
                                 }
 
                             } else {
 
-                                // Si nous avons une erreur, on ferme l'activité
-                                // pour retourner sur la précédante avec 'normalement'
-                                // le Fragment de Scan ouvert
                                 callback();
                             }
                         }
@@ -379,44 +357,33 @@ public class QuizActivity extends AppCompatActivity {
      */
     private boolean checkButton(Button button) {
 
-        // Si la reponse est fausse
+
         if (!button.getText().toString().equals(this.getGoodAnswer())) {
-            // On color en rouge la mauvaise reponse
+
             button.setBackgroundResource(R.drawable.roundedbutton_lose);
-            // On l'indique à l'utilisateur
             Toast.makeText(getApplicationContext(), "Mauvaise reponse ... :(", Toast.LENGTH_SHORT).show();
-            // On grise toutes les autres case sauf la bonne reponse
-            // qu'on laisse en vert
+
             for (Button b : this.getListButton()) {
                 if (b != button && !b.getText().toString().equals(this.getGoodAnswer())) {
                     b.setBackgroundResource(R.color.otherResp);
-                    // On retir le padding
                     b.setPadding(0, 0, 0, 0);
-                    // On desactive les boutons
                     b.setEnabled(false);
                 } else if (b.getText().toString().equals(this.getGoodAnswer())) {
 
-                    // On met en verre la bonne réponse
                     b.setBackgroundResource(R.drawable.roundedbutton_win);
                 }
-                // On retire le listener
-                // pour ne pas que le joueur
-                // essai de jouer encore
+
                 b.setOnClickListener(null);
             }
-
-           // this.score2 += 5;
-           // this.textScore2.setText(Integer.toString(this.score2));
 
             return false;
 
         } else {
-            // On indique à l'utilisateur qu'il a gangé
+
             Toast.makeText(getApplicationContext(), "C'est gagnée !! :)", Toast.LENGTH_SHORT).show();
             this.score1 += 5;
             this.textScore1.setText(Integer.toString(this.score1));
 
-            // On désactive tous les autres boutons
             this.winButton();
 
             return true;
@@ -436,9 +403,7 @@ public class QuizActivity extends AppCompatActivity {
                 b.setEnabled(false);
             } else {
                 b.setBackgroundResource(R.drawable.roundedbutton_win);
-                // On retire le listener
-                // pour ne pas que le joueur
-                // essai de jouer encore
+
                 b.setOnClickListener(null);
             }
         }
@@ -462,23 +427,16 @@ public class QuizActivity extends AppCompatActivity {
                     public void onCompleted(Exception e, Response<String> response) {
 
 
-                        // Si la réponse est null
                         if(response == null){
                             Toast.makeText(getApplicationContext(), "Erreur: Le serveur ne repond pas !", Toast.LENGTH_SHORT).show();
 
                         } else {
 
-                            // On verrifi si la requête nous a renvoyer une erreur.
-                            // Si elle renvoie False c'est qu'il n'y as pas d'erreur
-                            // et on peut passer à la suite
                             if(ErrorServerTools.errorManager(response, getApplicationContext(), null)){
-                                System.out.println("QuizActivity : Score adverse " + response.getResult());
                                 if(response.getResult() != null) {
-                                    System.out.println("QuizActivity APRES LE IF : Score adverse " + response.getResult());
-                                    //TODO: Les variable ne sont pas mis à jour ...
+
                                     textScore2.setText(String.valueOf(response.getResult()));
                                     score2 = Integer.parseInt(response.getResult());
-                                    System.out.println("QuizActivity APRES LE IF : Variable 'score2' " + score2);
                                 }
 
                             }
@@ -499,9 +457,8 @@ public class QuizActivity extends AppCompatActivity {
         doWait();
 
         Intent intent = new Intent(getApplicationContext(), QuizActivity.class);
-        // Création d'une boite
+
         Bundle bundle = new Bundle();
-        // Ajout de l'identifiant dans notre boite
         bundle.putInt("id",this.idAdv);
         bundle.putString("nom",String.valueOf(this.nomAdv));
         bundle.putString("prenom",String.valueOf(this.prenomAdv));
@@ -509,10 +466,9 @@ public class QuizActivity extends AppCompatActivity {
         bundle.putString("MonPrenom",String.valueOf(this.monPrenom));
         bundle.putInt("score1",this.score1);
         bundle.putInt("score2",this.score2);
-        // Ajout de notre boite dans notre prochaine activité
+
         intent.putExtras(bundle);
-        //intent.putExtra("fragmentActivity",getActivity());
-        // On demarre une activité
+
         startActivity(intent);
 
         this.finish();
@@ -526,7 +482,6 @@ public class QuizActivity extends AppCompatActivity {
     private void doWait() {
 
         try {
-            // Attente de 1 seconde
             Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -553,15 +508,11 @@ public class QuizActivity extends AppCompatActivity {
                     public void onCompleted(Exception e, Response<String> response) {
 
 
-                        // Si la réponse est null
                         if(response == null){
                             Toast.makeText(getApplicationContext(), "Erreur: Le serveur ne repond pas !", Toast.LENGTH_SHORT).show();
 
                         } else {
 
-                            // On verrifi si la requête nous a renvoyer une erreur.
-                            // Si elle renvoie False c'est qu'il n'y as pas d'erreur
-                            // et on peut passer à la suite
                             if(!ErrorServerTools.errorManager(response, getApplicationContext(), null)){
 
                                 callback();

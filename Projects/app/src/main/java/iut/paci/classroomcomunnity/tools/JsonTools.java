@@ -8,11 +8,11 @@ import iut.paci.classroomcomunnity.bean.Amis;
 import iut.paci.classroomcomunnity.bean.Question;
 
 /**
- * Created by dupeyrat on 26/02/18.
+ * Created by Kevin Dupeyrat on 26/02/18.
  *
- * Class Outil pour la gestion des fichier Json
+ * Class Outil pour la gestion des fichier Json.
  * Elle permetra de générer à partir de fichier Json
- * des Objets
+ * des Objets a utiliser par la suite dans l'application
  */
 
 public class JsonTools {

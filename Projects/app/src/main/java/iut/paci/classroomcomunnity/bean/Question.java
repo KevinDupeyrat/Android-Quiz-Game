@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by dupeyrat on 24/02/18.
+ * Created by Kevin Dupeyrat on 24/02/18.
  *
  * Class qui représente une Question.
  * Elle est composé d'une Question et d'une liste
@@ -17,7 +17,6 @@ import java.util.Map;
 
 public class Question {
 
-    // TODO: @SerializedName("") avec le bon nom
 
     @SerializedName("id")
     private int id;

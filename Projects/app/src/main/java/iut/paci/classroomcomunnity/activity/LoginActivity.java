@@ -19,6 +19,9 @@ import iut.paci.classroomcomunnity.tools.PropertiesTools;
 
 
 /**
+ *
+ * Created by Kevin Dupeyrat on 10/03/18.
+ *
  * Class de l'activité principal
  * Elle va permettre à l'utilisateur
  * de s'authentifier avec un login
@@ -40,16 +43,13 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Liaison du XML avec la class Java
         setContentView(R.layout.activity_login);
 
-        // Récupération des données saisie dans
-        // les input
+
         identifiant = (TextView) findViewById(R.id.editTextIdent);
         pass = (TextView) findViewById(R.id.editTextPass);
         bValidation = (Button) findViewById(R.id.buttonValider);
 
-        // Création de l'événement du bouton
         bValidation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -58,9 +58,7 @@ public class LoginActivity extends AppCompatActivity {
                 String mdp = pass.getText().toString();
 
                 if (iden.isEmpty()) {
-                    // Affichage d'un Toast à l'acran
                     Toast.makeText(view.getContext(), "Identifiant manquant", Toast.LENGTH_SHORT).show();
-                    // Affichage d'un Log
                     Log.i(TAG, "Identifiant manquant");
                 }
                 else if(mdp.isEmpty()) {
@@ -78,15 +76,10 @@ public class LoginActivity extends AppCompatActivity {
                         pass.setText("");
 
                         Bundle bundle = new Bundle();
-                        // Ajout de l'identifiant dans notre boite
                         bundle.putInt("my_id",Integer.parseInt(iden));
 
-                        // Création d'un Intent (activité)
-                        // Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                        // Ajout de notre boite dans notre prochaine activité
                         intent.putExtras(bundle);
-                        // On demarre une activité
                         startActivity(intent);
                     }
                 }

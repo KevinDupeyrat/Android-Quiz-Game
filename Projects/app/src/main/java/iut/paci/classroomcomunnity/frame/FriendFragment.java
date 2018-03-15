@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.koushikdutta.ion.Response;
@@ -46,15 +47,43 @@ public class FriendFragment extends Fragment {
     private String monNom;
     private String monPrenom;
 
-    private Timer timer_response;
-    private Timer timer_friend;
+    private static Timer timer_response;
+    private static Timer timer_friend;
     private FriendAdapter adapter;
     private List<Amis> amisList;
 
 
-
     public FriendFragment() {}
 
+
+    private static Timer getTimer_response() { return  timer_response; }
+
+    private static Timer getTimer_friend() { return  timer_friend; }
+
+    public static void delAllTimer() {
+
+        delGetFriendTimer();
+        delResonseTimer();
+    }
+
+    public static void delResonseTimer() {
+
+        if (FriendFragment.getTimer_response() != null) {
+            FriendFragment.getTimer_response().cancel();
+            FriendFragment.getTimer_response().purge();
+
+        }
+
+    }
+
+    public static void delGetFriendTimer() {
+
+        if (FriendFragment.getTimer_friend() != null) {
+            FriendFragment.getTimer_friend().cancel();
+            FriendFragment.getTimer_friend().purge();
+        }
+
+    }
 
     @Nullable
     @Override
@@ -82,6 +111,13 @@ public class FriendFragment extends Fragment {
 
     }
 
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        delAllTimer();
+    }
 
     /**
      * Méthode qui permet de rafraichir la liste
@@ -135,7 +171,7 @@ public class FriendFragment extends Fragment {
                     }
                 });
             }
-        }, 10000, 10000);
+        }, 4000, 4000);
 
 
     }
@@ -293,7 +329,7 @@ public class FriendFragment extends Fragment {
 
                         // Une fois la requête terminé nous
                         // fermons la bar de progression
-                        progressDialog.dismiss();
+                        //progressDialog.dismiss();
 
                         // Si la réponse est null
                         if(response == null){
@@ -306,8 +342,7 @@ public class FriendFragment extends Fragment {
                             // et on peut passer à la suite
                             if(ErrorServerTools.errorManager(response, getContext(), getActivity())){
 
-                                timer_response.cancel();
-                                timer_response.purge();
+                                delResonseTimer();
                                 timer_response = new Timer();
                                 timer_response.schedule(new TimerTask() {
 
@@ -364,12 +399,13 @@ public class FriendFragment extends Fragment {
                                 progressDialog.dismiss();
 
                                 if(response.getResult().equals("yes")) {
-                                    timer_response.cancel();
-                                    timer_response.purge();
+                                    delResonseTimer();
                                     goToQuiz(amis);
                                 } else if(response.getResult().equals("no")) {
                                     //TODO: Gérer une reponse négative
                                     System.out.println("ON A DIT NON !!!!");
+                                    delResonseTimer();
+                                    Toast.makeText(getContext(), "Ton amis a refusé de jouer", Toast.LENGTH_SHORT).show();
                                 }
 
                             }
@@ -396,8 +432,6 @@ public class FriendFragment extends Fragment {
             @Override
             public void run() {
 
-                //TODO: méthode en arrière plan pour vérifier
-                //TODO: si nous n'avons pas de requêtes sur le server
                 loopVerifHaveRequest();
 
             }
@@ -417,7 +451,6 @@ public class FriendFragment extends Fragment {
         // reponse d'un server via HTTP.
         // Ici nous voulons récupérer un fichier Json
         Ion.with(getContext())
-                //paci.iut.1235
                 .load(PropertiesTools.genURL(getContext(), "ckeck_request")
                         +"?key="+ MainActivity.getServerCode()
                         +"&my_id=" + MainActivity.getMy_id())
@@ -445,8 +478,7 @@ public class FriendFragment extends Fragment {
 
                                 if(!response.getResult().equals("please wait")){
 
-                                    timer_response.cancel();
-                                    timer_response.purge();
+                                    delResonseTimer();
 
                                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                                     builder.setTitle("Tu veux jouer avec moi ?");
@@ -545,10 +577,10 @@ public class FriendFragment extends Fragment {
      * le Quiz avec l'ami séléctionné
      * @param ami
      */
-    private void goToQuiz(Amis ami){
+    private void goToQuiz(final Amis ami){
 
-        this.timer_friend.cancel();
-        this.timer_friend.purge();
+        delAllTimer();
+//        this.logOutServer();
 
         // Nous récupérons toutes les info que
         // nous avons besoin pour la suite
@@ -582,5 +614,25 @@ public class FriendFragment extends Fragment {
 
     }
 
+
+//    /**
+//     * Méthode qui permet de ce déloger du server
+//     */
+//    private void logOutServer(){
+//
+//        // On envoie la demande de connexion
+//        // au serveur
+//        Ion.with(getContext())
+//                .load( PropertiesTools.genURL(getContext(), "logout")
+//                        +"?key=" + MainActivity.getServerCode()
+//                        +"&id="+ MainActivity.getMy_id())
+//                .asJsonObject()
+//                .setCallback(new FutureCallback<JsonObject>() {
+//                    @Override
+//                    public void onCompleted(Exception e, JsonObject result) {
+//
+//                    }
+//                });
+//    }
 
 }

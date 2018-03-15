@@ -8,7 +8,12 @@ import android.view.ViewGroup;
 
 import iut.paci.classroomcomunnity.R;
 
-
+/**
+ * Created by Kevin Dupeyrat on 28/02/18.
+ *
+ * Class qui représente la page de renseignement
+ * sur l'Autheur
+ */
 public class AboutFragment extends Fragment {
 
     public AboutFragment() {

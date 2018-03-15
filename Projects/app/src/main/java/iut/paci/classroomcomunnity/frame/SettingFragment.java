@@ -1,7 +1,5 @@
 package iut.paci.classroomcomunnity.frame;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,6 +9,11 @@ import android.view.ViewGroup;
 import iut.paci.classroomcomunnity.R;
 
 
+/**
+ * Created by Kevin Dupeyrat on 10/03/18.
+ *
+ * Class qui sera la page de configuration de l'application
+ */
 public class SettingFragment extends Fragment {
 
 

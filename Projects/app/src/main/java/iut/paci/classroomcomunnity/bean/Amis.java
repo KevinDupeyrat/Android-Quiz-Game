@@ -4,10 +4,11 @@ import com.google.gson.annotations.SerializedName;
 
 
 /**
- * Created by dupeyrat on 18/02/18.
+ * Created by Kevin Dupeyrat on 18/02/18.
  *
  * Class qui represente un amis
- * avec son nom et son avatar
+ * avec son nom et son avatar, son prénom,
+ * son status de connexion et son dernier score
  */
 
 public class Amis {

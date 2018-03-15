@@ -29,7 +29,13 @@ import me.dm7.barcodescanner.zbar.Result;
 import me.dm7.barcodescanner.zbar.ZBarScannerView;
 
 /**
- * Fragment qui gère le scan du code QR
+ *
+ * Created by Kevin Dupeyrat on 10/03/18.
+ *
+ * Fragment qui gère le scan du code QR.
+ * Celui-ci permet de récupèrer le code du server
+ * pour avoir la possibilité de se connecter
+ *
  */
 public class ScanFragment extends Fragment implements ZBarScannerView.ResultHandler{
 

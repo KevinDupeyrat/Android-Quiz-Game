@@ -1,11 +1,9 @@
 package iut.paci.classroomcomunnity.tools;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.koushikdutta.ion.Response;
 
@@ -13,10 +11,13 @@ import iut.paci.classroomcomunnity.R;
 import iut.paci.classroomcomunnity.frame.ScanFragment;
 
 /**
- * Created by dupeyrat on 28/02/18.
+ * Created by Kevin Dupeyrat on 28/02/18.
  *
  * Class qui permet la gestion des erreurs rencontré
  * avec la communication avec le serveur
+ * pour que celle-ci soit localiser et généraliser
+ * pour toutes l'application
+ *
  */
 
 public class ErrorServerTools {

@@ -14,7 +14,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
@@ -32,8 +31,12 @@ import iut.paci.classroomcomunnity.frame.SettingFragment;
 import iut.paci.classroomcomunnity.tools.PropertiesTools;
 
 /**
+ *
+ * Created by Kevin Dupeyrat on 10/03/18.
+ *
  * Activité pricincipale qui
  * permet de switcher avec les Framgments
+ * présent dans le Drawer.
  */
 public class MainActivity extends AppCompatActivity {
 
@@ -49,39 +52,18 @@ public class MainActivity extends AppCompatActivity {
         return my_id;
     }
 
-
-    /**
-     *
-     * @return
-     */
     public static NavigationView getNavigatView() {
         return nav;
     }
 
-
-    /**
-     * Setter du code Server
-     *
-     * @param code
-     */
     public static void setServerCode(String code) {
         serverCode = code;
     }
 
-    /**
-     * Getter du code server
-     *
-     * @return
-     */
     public static String getServerCode() {
         return serverCode;
     }
 
-    /**
-     * Getter du drawer
-     *
-     * @return
-     */
     public static DrawerLayout getDrawer() { return drawer; }
 
 
@@ -97,20 +79,16 @@ public class MainActivity extends AppCompatActivity {
 
         my_id = getIntent().getExtras().getInt("my_id");
 
-        // On recupère le Drawer
+
         drawer = (DrawerLayout) findViewById(R.id.drawer);
 
-        // On vérifie que l'utilisateur posséde Android Marshmalow
-        // et que la demande de permition pour la camera n'est
-        // pas déjà autorisé
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
                 && checkSelfPermission(Manifest.permission.CAMERA) !=
                 PackageManager.PERMISSION_GRANTED) {
 
-            // On fait la demande de permition à l'utilisateur
             requestPermissions(new String[]{Manifest.permission.CAMERA},99);
 
-        } else { // Si l'autorisation a déjà était donnée
+        } else {
 
             this.creatDrawer();
         }
@@ -160,15 +138,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
-        // Si nous avons l'autorisation
         if(requestCode==99 && grantResults[0]==PackageManager.PERMISSION_GRANTED){
 
             this.creatDrawer();
 
         } else {
 
-            // Si la permition n'est pas donné, on bloque le drawer
-            // de l'activité pour que l'utilisateur ne puisse rien faire
             drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 
         }
@@ -191,20 +166,13 @@ public class MainActivity extends AppCompatActivity {
      */
     private void creatDrawer() {
 
-        // On recupère le Navigateur View
         nav = (NavigationView) findViewById(R.id.nav_view);
         nav.bringToFront();
 
-        // Setup drawer view
         setupDrawerContent(nav);
 
-        // Création du bouton pour ouvrir et fermet le Drawer
         toggle = new ActionBarDrawerToggle(this, drawer, R.string.open, R.string.close);
-
-        // On ajoute un listener au Drawer qui écoutera
-        // les événement sur le bouton toggle
         drawer.setDrawerListener(toggle);
-        // Synchronisation du toggle avec le Drower
         toggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         nav.getMenu().performIdentifierAction(R.id.nav_photo, 0);
@@ -245,8 +213,6 @@ public class MainActivity extends AppCompatActivity {
 
         ((FrameLayout)findViewById(R.id.contentFrame)).setBackground(null);
 
-        // Creation d'un nouveau fragment que nous mettrons à la place
-        // de celle par défaut
         Fragment fragment = null;
         Class fragmentClass;
         switch(menuItem.getItemId()) {
@@ -272,6 +238,10 @@ public class MainActivity extends AppCompatActivity {
                 fragmentClass = null;
                 return;
         }
+
+
+        FriendFragment.delAllTimer();;
+
 
         try {
             fragment = (Fragment) fragmentClass.newInstance();

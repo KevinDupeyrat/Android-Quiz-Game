@@ -12,6 +12,15 @@ import iut.paci.classroomcomunnity.activity.MainActivity;
 
 /**
  * Created by dupeyrat on 02/03/18.
+ *
+ * Class qui permet la gestion des données
+ * présent dans le fichier server.properties.
+ * Cela évite d'avoire des données en dur sur
+ * les informations liées au server comme
+ * par exemple l'adress IP, le Protocole utilisé
+ * pour établire la communication, ou encore les différente
+ * URL du WebService a utiliser pour effectuer des action
+ * avec lui.
  */
 
 public class PropertiesTools {
