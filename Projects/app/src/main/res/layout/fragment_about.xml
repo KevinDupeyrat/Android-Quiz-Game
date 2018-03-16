@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:text="Autheur : Dupeyrat \n
+        android:text="Auteur : Dupeyrat - Hamoudi \n
 Université : IUT Paris Descartes \n
 Cours : Android"
         android:textColor="@color/colorAccent"/>
